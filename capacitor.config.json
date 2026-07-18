@@ -1,0 +1,9 @@
+{
+  "appId": "com.hadith.app",
+  "appName": "Hadith Offline",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  } 
+  
+}
