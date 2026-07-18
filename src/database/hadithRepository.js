@@ -139,6 +139,7 @@ export async function getBooks() {
     return books
 }
 
+
 function parseJson(value){
     if(!value) return [];
     try{
@@ -193,6 +194,75 @@ export async function getHadithsContent(bookName, page, limit) {
             englishTitle: row[4],        
             englishText: row[5],        
             hadithNumber: row[6]
+        }));
+
+    }
+
+    return{
+        success:true,
+        message:rows,
+        total,
+        totalPages
+    };
+
+}
+
+
+export async function getQuranSuras() {
+
+    const db = await openDatabase();
+    const result = db.exec(` SELECT DISTINCT  surahHeader, surahNameEng, surahNameBn FROM quran ORDER BY id`);    
+    if(result.length===0)
+        return [];
+    const books = result[0].values.map(row=>({
+        surahHeader: row[0],
+        surahNameEng: row[1],
+        surahNameBn: row[2],
+        link: `/surahContent/${row[1]}`
+    }));
+
+    return books
+}
+
+export async function getSurahContent(surahNameEng, page, limit) {
+
+    const db = await openDatabase();
+    // Total
+    const totalResult = db.exec(` SELECT COUNT(*) as total FROM quran WHERE surahNameEng='${surahNameEng}' `);
+
+    const total = totalResult[0].values[0][0];
+    const totalPages = Math.ceil(total / limit);
+
+    const offset = (page - 1) * limit;
+
+    const result = db.exec(`
+        SELECT
+            id,
+            surahHeader,
+            surahNameEng,
+            surahNameBn,
+            ayatNo,
+            arabicText,
+            banglaText,
+            englishText
+        FROM quran
+        WHERE surahNameEng='${surahNameEng}'
+        ORDER BY id
+        LIMIT ${limit}
+        OFFSET ${offset}
+    `);
+
+    let rows = [];
+    if(result.length>0){
+        rows = result[0].values.map(row=>({
+            id: row[0],
+            surahHeader: row[1],        
+            surahNameEng: parseJson(row[2]),        
+            surahNameBn: parseJson(row[3]),        
+            ayatNo: row[4],        
+            arabicText: row[5],        
+            banglaText: row[6],
+            englishText: row[7]
         }));
 
     }

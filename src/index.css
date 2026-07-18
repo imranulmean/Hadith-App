@@ -34,6 +34,16 @@
   font-family: 'indopak' !important;
 }
 
+@font-face{
+  font-family:arbMushafFont;
+  src:url('arb.woff2') 
+  format("woff2");
+  font-display:swap}
+
+.font-MushafFont {
+    font-family: arbMushafFont,sans-serif
+}
+
 *{
     margin: 0;
     padding: 0;
