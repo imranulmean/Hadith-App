@@ -115,7 +115,7 @@ export default function SurahContent() {
                     <div className="flex gap-4 flex-wrap justify-center p-4">
                         {hadiths.map((item, index) => (
                             <div key={index} id={`hadith-${index+1}`}
-                                className="flex flex-col bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs"
+                                className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs"
                             >
                                 {/* title */}
                                 <h5 className="mb-3 text-md font-semibold tracking-tight text-heading">
@@ -132,8 +132,8 @@ export default function SurahContent() {
                                 <div className="">
                                     {/* /////////////////////// */}
                                     {/* arabic text */}
-                                        <div className="p-4 border border-gray-200 rounded-lg text-right md:max-w-md">
-                                            <p className="text-3xl font-normal font-MushafFont text-right" style={{'font-size':'40px', 'line-height':'4rem'}}>
+                                        <div className="p-0 border-t border-gray-200 text-right md:max-w-md">
+                                            <p className="text-3xl font-normal font-MushafFont text-right" style={{'font-size':'30px', 'line-height':'4rem'}}>
                                                 {item.arabicText}
                                             </p>
                                             <p className="text-md font-MushafFont" >

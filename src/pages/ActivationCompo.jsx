@@ -117,7 +117,7 @@ export default function ActivationCompo(){
         <>
             <HeaderLibrary/>
             <Jumbotron setRemaining={setRemaining} trialEnd={deviceInfo.trialEnd}/>
-            <div className="h-screen flex flex-col flex-wrap gap-2 items-center px-4 py-2 bg-gray-900 text-gray-200">
+            <div className="flex flex-col flex-wrap gap-2 items-center px-4 py-2 text-gray-200">
                 <p className="text-sm text-gray-300">Deveice ID: {deviceInfo.deviceId }</p>
                 <p className="text-sm text-gray-300">First Install: {moment(deviceInfo.firstInstall).format('MMMM Do YYYY, h:mm a')}</p>
                 <p className="text-sm text-gray-300">Trial Start: {moment(deviceInfo.trialStart).format('MMMM Do YYYY, h:mm a')}</p>

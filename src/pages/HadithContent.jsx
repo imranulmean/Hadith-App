@@ -166,7 +166,7 @@ export default function HadithContent() {
                     <div className="flex gap-4 flex-wrap justify-center p-4">
                         {hadiths.map((item, index) => (
                             <div key={index} id={`hadith-${index+1}`}
-                                className="flex flex-col bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs"
+                                className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs"
                             >
                                 {/* title */}
                                 <h5 className="mb-3 text-lg font-semibold tracking-tight text-heading">
@@ -204,9 +204,9 @@ export default function HadithContent() {
                                     {/* /////////////////////// */}
                                     {/* arabic text */}
                                     {item.arabicText?.length > 0 && (
-                                        <div className="mb-3 p-4 border border-gray-200 rounded-lg text-right md:max-w-md">
+                                        <div className="mb-3 border-t border-gray-200 text-right md:max-w-md">
                                             {item.arabicText.map((text, i) => (
-                                                <p key={i} className="text-2xl leading-loose arabic-text" dir="rtl" lang="ar">
+                                                <p key={i} className="text-2xl leading-loose font-MushafFont" dir="rtl" lang="ar">
                                                     {text}
                                                 </p>
                                             ))}
