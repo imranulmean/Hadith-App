@@ -43,6 +43,12 @@ export default function Suras(){
         }    
     }    
 
+    const filtered= hadiths.filter((hadith)=>{
+        if(!searchSura) return hadith;
+        if(hadith.surahNameEng.toLowerCase().includes(searchSura.toLowerCase()) || hadith.surahNameBn.toLowerCase().includes(searchSura.toLowerCase())) 
+            return hadith;
+    })
+
     if(!activated){
         return(
             <>
@@ -66,15 +72,15 @@ export default function Suras(){
         )
     }    
 
-    const filtered= hadiths.filter((hadith)=>{
-        if(!searchSura) return hadith;
-        if(hadith.surahNameEng.toLowerCase().includes(searchSura.toLowerCase()) || hadith.surahNameBn.toLowerCase().includes(searchSura.toLowerCase())) 
-            return hadith;
-    })
     return(
         <>
             <HeaderLibrary />
-            <Banner/>                
+            <Banner/>
+            {loading && (
+                <div className="flex justify-center items-start p-10 bg-[#0C171A] text-gray-200">
+                    <p className="text-lg">Fetching Surahs...</p>
+                </div>
+            )}                            
             <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
 
                 <input type='text' placeholder="Search Sura" onChange={(e)=>setSearchSura(e.target.value)}

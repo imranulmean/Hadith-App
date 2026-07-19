@@ -21,7 +21,7 @@ export default function App(){
         <Route path='/hadithContent/:bookName' element={<HadithContent />} />
         <Route path='/hadithBookmarks' element={<HadithBookmarks />} />
         <Route path='/suras' element={<Suras />} />
-        <Route path='/surahContent/:surahName' element={<SurahContent />} />
+        <Route path='/surahContent/:surahId' element={<SurahContent />} />
       </Routes>
     </BrowserRouter>    
   )

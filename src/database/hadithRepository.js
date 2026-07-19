@@ -228,24 +228,25 @@ export async function deleteBookmark(bookmarkIndex){
 export async function getQuranSuras() {
 
     const db = await openDatabase();
-    const result = db.exec(` SELECT DISTINCT  surahHeader, surahNameEng, surahNameBn FROM quran ORDER BY id`);    
+    const result = db.exec(` SELECT DISTINCT  surahHeader, surahNameEng, surahNameBn, surahId FROM quran ORDER BY id`);    
     if(result.length===0)
         return [];
     const books = result[0].values.map(row=>({
         surahHeader: row[0],
         surahNameEng: row[1],
         surahNameBn: row[2],
-        link: `/surahContent/${row[1]}`
+        surahId: row[3],
+        link: `/surahContent/${row[3]}`
     }));
 
     return books
 }
 
-export async function getSurahContent(surahNameEng, page) {
+export async function getSurahContent(surahId, page) {
 
     const db = await openDatabase();
     // Total
-    const totalResult = db.exec(` SELECT COUNT(*) as total FROM quran WHERE surahNameEng='${surahNameEng}' `);
+    const totalResult = db.exec(` SELECT COUNT(*) as total FROM quran WHERE surahId='${surahId}' `);
 
     const total = totalResult[0].values[0][0];
 
@@ -260,7 +261,7 @@ export async function getSurahContent(surahNameEng, page) {
             banglaText,
             englishText
         FROM quran
-        WHERE surahNameEng='${surahNameEng}'
+        WHERE surahId='${surahId}'
         ORDER BY id
     `);
 

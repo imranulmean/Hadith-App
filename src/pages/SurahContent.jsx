@@ -9,10 +9,7 @@ import ActivationCompo from "./ActivationCompo";
 export default function SurahContent() {
 
     const {pathname} = useLocation();
-    const { surahName } = useParams();
-    const surahNameEng=surahName;
-    // console.log(surahNameEng)
-    const contentName=`surah/${surahNameEng}`
+    const { surahId } = useParams();
 
     const [hadiths, setHadiths] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -59,7 +56,7 @@ export default function SurahContent() {
             else{
                 setActivated(true);
             }                      
-            const data = await getSurahContent(surahNameEng, page)
+            const data = await getSurahContent(surahId, page)
             setHadiths(data.message);
             setTotalPages(data.totalPages);
             setTotal(data.total);
