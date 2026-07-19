@@ -9,6 +9,8 @@ export default function Suras(){
     const [hadiths, setHadiths]= useState([]);
     const [loading, setLoading] = useState(false);
     const [activated, setActivated] = useState(false);
+    const [searchSura, setSearchSura] = useState(false);
+    
 
     useEffect(()=>{
         // console.log(localStorage.getItem('lastHadith'))
@@ -64,14 +66,22 @@ export default function Suras(){
         )
     }    
 
+    const filtered= hadiths.filter((hadith)=>{
+        if(!searchSura) return hadith;
+        if(hadith.surahNameEng.toLowerCase().includes(searchSura.toLowerCase()) || hadith.surahNameBn.toLowerCase().includes(searchSura.toLowerCase())) 
+            return hadith;
+    })
     return(
         <>
             <HeaderLibrary />
             <Banner/>                
             <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
+
+                <input type='text' placeholder="Search Sura" onChange={(e)=>setSearchSura(e.target.value)}
+                            className="text-gray-400 rounded-lg bg-[#0C171A] mt-2" />
                 <div className="flex gap-2 flex-wrap justify-center p-4">                    
                     {
-                        hadiths.map(item=>{
+                        filtered.map(item=>{
                             return(
                                 <div class="flex flex-col items-center bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs md:flex-row md:max-w-sm md:flex-row md:max-w-sm">
                                     <div class="flex flex-col justify-between">

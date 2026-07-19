@@ -129,11 +129,11 @@ export default function SurahContent() {
                                     </button>
                                 </div>
                                 
-                                <div className="flex flex-col md:flex-row md:gap-2">
+                                <div className="">
                                     {/* /////////////////////// */}
                                     {/* arabic text */}
                                         <div className="p-4 border border-gray-200 rounded-lg text-right md:max-w-md">
-                                            <p className="text-3xl font-normal font-MushafFont" style={{'line-height':'4rem'}}>
+                                            <p className="text-3xl font-normal font-MushafFont text-right" style={{'font-size':'40px', 'line-height':'4rem'}}>
                                                 {item.arabicText}
                                             </p>
                                             <p className="text-md font-MushafFont" >

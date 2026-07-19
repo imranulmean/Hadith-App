@@ -94,14 +94,18 @@ export default function HadithContent() {
         setBookmarkDiv(index)
     }    
 
-    const saveBookmark =async(index)=>{        
+    const saveBookmark =async(index)=>{
+        if(!bookmarkName)
+        {
+            alert("Please Enter Name");
+            return
+        }
         const page = searchParams.get('page');
         const path = page && page > 1 ? `${pathname}?page=${page}&hadithIndex=${index}` : `${pathname}?hadithIndex=${index}`;
         const newBookmark={
             bookmarkName,
             link:path
         }
-        console.log(newBookmark)
         const bookmarkSuccess= await saveHadithBookmark(newBookmark);
         if(bookmarkSuccess)
         alert("Bookmark Saved");
