@@ -16,10 +16,8 @@ export default function SurahContent() {
 
     const [hadiths, setHadiths] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [lang, setLang]=useState('bn')
     const [totalPages, setTotalPages] = useState(0);
     const [total, setTotal] = useState(0);
-    const LIMIT = 20;
     const [activated, setActivated] = useState(false);
 
     // ✅ get and set page from URL
@@ -28,20 +26,14 @@ export default function SurahContent() {
 
     useEffect(() => {
         document.title = 'Islamic Library';        
+        getHadiths();
+        window.scrollTo(0,0)        
     }, []);    
 
-    useEffect(() => {
-        getHadiths();
-        window.scrollTo(0,0)
-    }, [page]);
 
     // Go to users tracked hadith    
     useEffect(() => {
-        
-        // if (hadiths.length > 0 && location.hash) {
-        //     const el = document.getElementById(location.hash.replace('#', ''));
-        //     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // }
+
         const params = new URLSearchParams(location.search);
         const hadithId = params.get('hadithIndex');
     
@@ -67,8 +59,7 @@ export default function SurahContent() {
             else{
                 setActivated(true);
             }                      
-            const data = await getSurahContent(surahNameEng, page, LIMIT)
-
+            const data = await getSurahContent(surahNameEng, page)
             setHadiths(data.message);
             setTotalPages(data.totalPages);
             setTotal(data.total);
@@ -80,32 +71,13 @@ export default function SurahContent() {
         }
     };
 
-        // ✅ update URL when page changes
-    const changePage = (newPage) => {
-        setSearchParams({ page: newPage });
-    };
-
     // save bookmark
-    function saveBookmark(index) {
-        
-        const page = searchParams.get('page');
-        const path = page && page > 1 ? `${pathname}?page=${page}&hadithIndex=${index}` : `${pathname}?hadithIndex=${index}`;
+    function saveTrack(index) {        
+        const path = `${pathname}?hadithIndex=${index}`;
         localStorage.setItem('lastAyat', path);
-        alert("Bookmarked Saved");
+        alert("Track Saved");
     }    
-
-    function copyLink(index) {
-        console.log(index)
-        const page = searchParams.get('page');
-        const path = page && page > 1 ? `${pathname}?page=${page}&hadithIndex=${index}` : `${pathname}?hadithIndex=${index}`;
-        console.log(path);
-        const fullUrl = `${window.location.origin}${path}`;
-
-        navigator.clipboard.writeText(fullUrl).then(() => {
-            alert("Hadith Link Copied!");
-        });        
-        
-    }    
+   
 
     if(!activated){
         return(
@@ -140,23 +112,6 @@ export default function SurahContent() {
 
             {!loading && (
                 <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
-
-                    {/* total count */}
-                    <div className="w-full flex justify-around md:justify-center gap-2 mt-4 mb-4">
-                        <p className="text-sm text-gray-200 ">
-                            {contentName}
-                        </p>
-                        <p className="text-sm text-gray-200 ">
-                            Showing {(page - 1) * LIMIT + 1}–{Math.min(page * LIMIT, total)} of {total} 
-                        </p>
-                    </div>
-                    
-                    <div className="flex gap-2">
-
-                    </div>
-                    {/* pagination buttons */}
-                        <PaginationButtons page={page} totalPages={totalPages} changePage={changePage} setLang={setLang}/>
-                    {/* hadith cards */}
                     <div className="flex gap-4 flex-wrap justify-center p-4">
                         {hadiths.map((item, index) => (
                             <div key={index} id={`hadith-${index+1}`}
@@ -164,11 +119,11 @@ export default function SurahContent() {
                             >
                                 {/* title */}
                                 <h5 className="mb-3 text-md font-semibold tracking-tight text-heading">
-                                    {item.surahHeader}
-                                    <br/>page no:{page}, Ayat:{index+1} 
+                                    {item.surahHeader} <br/>
+                                    Reading:{index+1} 
                                 </h5>
                                 <div className="flex gap-2 justify-center">
-                                    <button onClick={()=>saveBookmark(index+1)}
+                                    <button onClick={()=>saveTrack(index+1)}
                                         class="bg-green-900 px-4 py-2 text-white mb-2">
                                         Track Record
                                     </button>
@@ -178,10 +133,10 @@ export default function SurahContent() {
                                     {/* /////////////////////// */}
                                     {/* arabic text */}
                                         <div className="p-4 border border-gray-200 rounded-lg text-right md:max-w-md">
-                                            <p className="text-md leading-5 font-MushafFont" >
+                                            <p className="text-3xl font-normal font-MushafFont" style={{'line-height':'4rem'}}>
                                                 {item.arabicText}
                                             </p>
-                                            <p className="text-md leading-5 font-MushafFont" >
+                                            <p className="text-md font-MushafFont" >
                                                 {item.banglaText}
                                             </p>                                            
                                         </div>
@@ -191,10 +146,6 @@ export default function SurahContent() {
                             
                         ))}
                     </div>
-
-                    {/* pagination buttons */}
-                    <PaginationButtons page={page} totalPages={totalPages} changePage={changePage} />
-
                 </div>
             )}
         </>

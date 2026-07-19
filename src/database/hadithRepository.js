@@ -207,6 +207,23 @@ export async function getHadithsContent(bookName, page, limit) {
 
 }
 
+export async function saveHadithBookmark(newBookmark){
+    let bookmarks = await localforage.getItem("hadithBookmarks") || [];
+    bookmarks.push(newBookmark);
+    localforage.setItem( "hadithBookmarks",bookmarks);
+    return true;
+}
+
+export async function getHadithBookmark(){
+    let bookmarks = await localforage.getItem("hadithBookmarks") || [];
+    return bookmarks;
+}
+
+export async function deleteBookmark(bookmarkIndex){
+    let bookmarks = await localforage.getItem("hadithBookmarks") || [];
+    bookmarks.splice(bookmarkIndex, 1);
+    localforage.setItem( "hadithBookmarks",bookmarks);
+}
 
 export async function getQuranSuras() {
 
@@ -224,16 +241,13 @@ export async function getQuranSuras() {
     return books
 }
 
-export async function getSurahContent(surahNameEng, page, limit) {
+export async function getSurahContent(surahNameEng, page) {
 
     const db = await openDatabase();
     // Total
     const totalResult = db.exec(` SELECT COUNT(*) as total FROM quran WHERE surahNameEng='${surahNameEng}' `);
 
     const total = totalResult[0].values[0][0];
-    const totalPages = Math.ceil(total / limit);
-
-    const offset = (page - 1) * limit;
 
     const result = db.exec(`
         SELECT
@@ -248,8 +262,6 @@ export async function getSurahContent(surahNameEng, page, limit) {
         FROM quran
         WHERE surahNameEng='${surahNameEng}'
         ORDER BY id
-        LIMIT ${limit}
-        OFFSET ${offset}
     `);
 
     let rows = [];
@@ -270,8 +282,7 @@ export async function getSurahContent(surahNameEng, page, limit) {
     return{
         success:true,
         message:rows,
-        total,
-        totalPages
+        total
     };
 
 }

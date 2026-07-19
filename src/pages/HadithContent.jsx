@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
 import HeaderLibrary from "../components/HeaderLibrary";
 import PaginationButtons from "../components/PaginationButtons";
-import { checkIfTrialEnd, createHadithAppActivation, getHadithsContent } from "../database/hadithRepository";
+import { checkIfTrialEnd, createHadithAppActivation, getHadithsContent, saveHadithBookmark } from "../database/hadithRepository";
 import ActivationCompo from "./ActivationCompo";
 
 export default function HadithContent() {
@@ -12,7 +12,6 @@ export default function HadithContent() {
     const book_name=pathname.split('/')[2];
     const contentName=`hadith/${book_name}`
 
-    const BASE_API = import.meta.env.VITE_API_BASE_URL;
     const [hadiths, setHadiths] = useState([]);
     const [loading, setLoading] = useState(false);
     const [lang, setLang]=useState('bn')
@@ -20,6 +19,8 @@ export default function HadithContent() {
     const [total, setTotal] = useState(0);
     const LIMIT = 20;
     const [activated, setActivated] = useState(false);
+    const [bookmarkDiv, setBookmarkDiv] = useState();
+    const [bookmarkName, setBookmarkName] = useState();
 
     // ✅ get and set page from URL
     const [searchParams, setSearchParams] = useSearchParams();
@@ -36,11 +37,7 @@ export default function HadithContent() {
 
     // Go to users tracked hadith    
     useEffect(() => {
-        
-        // if (hadiths.length > 0 && location.hash) {
-        //     const el = document.getElementById(location.hash.replace('#', ''));
-        //     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // }
+
         const params = new URLSearchParams(location.search);
         const hadithId = params.get('hadithIndex');
     
@@ -85,26 +82,31 @@ export default function HadithContent() {
     };
 
     // save bookmark
-    function saveBookmark(index) {
+    function saveTrack(index) {
         
         const page = searchParams.get('page');
         const path = page && page > 1 ? `${pathname}?page=${page}&hadithIndex=${index}` : `${pathname}?hadithIndex=${index}`;
         localStorage.setItem('lastHadith', path);
-        alert("Bookmarked Saved");
+        alert("Track Saved");
     }    
 
-    function copyLink(index) {
-        console.log(index)
+    function openBookmark(index) {
+        setBookmarkDiv(index)
+    }    
+
+    const saveBookmark =async(index)=>{        
         const page = searchParams.get('page');
         const path = page && page > 1 ? `${pathname}?page=${page}&hadithIndex=${index}` : `${pathname}?hadithIndex=${index}`;
-        console.log(path);
-        const fullUrl = `${window.location.origin}${path}`;
-
-        navigator.clipboard.writeText(fullUrl).then(() => {
-            alert("Hadith Link Copied!");
-        });        
-        
-    }    
+        const newBookmark={
+            bookmarkName,
+            link:path
+        }
+        console.log(newBookmark)
+        const bookmarkSuccess= await saveHadithBookmark(newBookmark);
+        if(bookmarkSuccess)
+        alert("Bookmark Saved");
+        setBookmarkDiv(-1)
+    }
 
     if(!activated){
         return(
@@ -169,16 +171,30 @@ export default function HadithContent() {
                                     <br/>page no:{page}, Hadith:{index+1} 
                                 </h5>
                                 <div className="flex gap-2 justify-center">
-                                    <button onClick={()=>saveBookmark(index+1)}
+                                    <button onClick={()=>saveTrack(index+1)}
                                         class="bg-green-900 px-4 py-2 text-white mb-2">
                                         Track Record
                                     </button>
-                                    <button onClick={()=>copyLink(index+1)}
+                                    <button onClick={()=>openBookmark(index)}
                                         class="bg-green-900 px-4 py-2 text-white mb-2">
-                                        Copy Link
+                                        Save 
                                     </button>
                                 </div>
-                                
+                                {
+                                    index == bookmarkDiv &&
+                                    <div className="flex flex-col mb-2 gap-2">
+                                        <label>Bookmark Name:</label>
+                                        <input type='text' onChange={(e)=>setBookmarkName(e.target.value)}
+                                                className="text-gray-400 rounded-lg bg-[#0C171A]" />
+                                        <button onClick={()=>saveBookmark(index+1)}
+                                            class="bg-green-900 px-4 py-2 text-white mb-2">
+                                            Save Bookmark
+                                        </button>                                        
+                                    </div>                                    
+
+                                }
+
+
                                 <div className="flex flex-col md:flex-row md:gap-2">
                                     {/* /////////////////////// */}
                                     {/* arabic text */}

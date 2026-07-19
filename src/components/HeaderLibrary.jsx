@@ -25,6 +25,10 @@ export default function HeaderLibrary(){
                                 <Link onClick={() => setMenuOpen(false)} to="/hadiths" 
                                     className={`rounded-md px-3 py-2 text-sm font-medium ${(location.pathname === '/hadiths' || location.pathname === '/') ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Hadiths</Link>
                             </li>
+                            <li>
+                                <Link onClick={() => setMenuOpen(false)} to="/suras" 
+                                    className={`rounded-md px-3 py-2 text-sm font-medium ${(location.pathname === '/suras') ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Al-Quran</Link>
+                            </li>                            
                              <li>
                                 <Link onClick={() => setMenuOpen(false)} to="/activationCompo" 
                                     className={`rounded-md px-3 py-2 text-sm font-medium ${location.pathname === '/activationCompo' ? 'text-white border border-white ' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Status</Link>
@@ -72,16 +76,16 @@ export default function HeaderLibrary(){
                         <ul className="font-medium flex justify-center gap-2 p-4 border border-default rounded-base bg-neutral-secondary-soft">
                             <li>
                                 <Link onClick={() => setMenuOpen(false)} to="/hadiths" 
-                                    className={`rounded-md px-3 py-2 text-sm font-medium ${location.pathname === '/hadiths' ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Hadiths</Link>
+                                    className={`rounded-md px-3 py-2 text-sm font-medium ${( location.pathname === '/hadiths' || location.pathname === '/') ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Hadiths</Link>
                             </li>
+                            <li>
+                                <Link onClick={() => setMenuOpen(false)} to="/suras" 
+                                    className={`rounded-md px-3 py-2 text-sm font-medium ${(location.pathname === '/suras' ) ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Al-Quran</Link>
+                            </li>                            
                             <li>
                                 <Link onClick={() => setMenuOpen(false)} to="/activationCompo" 
                                     className={`rounded-md px-3 py-2 text-sm font-medium ${location.pathname === '/activationCompo' ? 'text-white border border-white ' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Status</Link>
                             </li>
-                            {/* <li>
-                                 <Link onClick={() => setMenuOpen(false)} to="/news" 
-                                    className={`rounded-md px-3 py-2 text-sm font-medium ${location.pathname === '/news' ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>World News</Link>
-                            </li> */}
                         </ul>
                     </div>                
             </nav>              
