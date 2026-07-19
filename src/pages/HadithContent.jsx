@@ -110,6 +110,7 @@ export default function HadithContent() {
         if(bookmarkSuccess)
         alert("Bookmark Saved");
         setBookmarkDiv(-1)
+        setBookmarkName('')
     }
 
     if(!activated){

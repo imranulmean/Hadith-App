@@ -24,8 +24,12 @@ export default function HadithBookmarks(){
     return(<>
             <HeaderLibrary />
             <Banner/>                
-            <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
-                <div className="flex gap-2 flex-wrap justify-center p-4">                    
+            <div className="flex flex-col justify-start items-center bg-[#0C171A] text-gray-200">
+                <div className="flex gap-2 flex-wrap justify-center p-4">   
+                    {
+                        bookmarks.length <1 &&
+                        <p>No Bookmars Saved</p>
+                    }                 
                     {
                         bookmarks.map((item, index)=>{
                             return(
