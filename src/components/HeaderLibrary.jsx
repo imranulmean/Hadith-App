@@ -29,10 +29,10 @@ export default function HeaderLibrary(){
                                 <Link onClick={() => setMenuOpen(false)} to="/suras" 
                                     className={`rounded-md px-3 py-2 text-sm font-medium ${(location.pathname === '/suras') ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Al-Quran</Link>
                             </li>                            
-                             <li>
+                             {/* <li>
                                 <Link onClick={() => setMenuOpen(false)} to="/activationCompo" 
                                     className={`rounded-md px-3 py-2 text-sm font-medium ${location.pathname === '/activationCompo' ? 'text-white border border-white ' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Status</Link>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
                 </div>
@@ -82,10 +82,10 @@ export default function HeaderLibrary(){
                                 <Link onClick={() => setMenuOpen(false)} to="/suras" 
                                     className={`rounded-md px-3 py-2 text-sm font-medium ${(location.pathname === '/suras' ) ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Al-Quran</Link>
                             </li>                            
-                            <li>
+                            {/* <li>
                                 <Link onClick={() => setMenuOpen(false)} to="/activationCompo" 
                                     className={`rounded-md px-3 py-2 text-sm font-medium ${location.pathname === '/activationCompo' ? 'text-white border border-white ' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Status</Link>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>                
             </nav>              
