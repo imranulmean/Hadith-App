@@ -109,16 +109,15 @@ export default function SurahContent() {
 
             {!loading && (
                 <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
+                    {/* title */}
+                    <h5 className="p-2 mb-3 text-md font-semibold tracking-tight text-heading">
+                        {hadiths[0].surahHeader} <br/> 
+                    </h5>                    
                     <div className="flex gap-4 flex-wrap justify-center p-4">
                         {hadiths.map((item, index) => (
                             <div key={index} id={`hadith-${index+1}`}
                                 className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs"
                             >
-                                {/* title */}
-                                <h5 className="mb-3 text-md font-semibold tracking-tight text-heading">
-                                    {item.surahHeader} <br/>
-                                    Reading:{index+1} 
-                                </h5>
                                 <div className="flex gap-2 justify-center">
                                     <button onClick={()=>saveTrack(index+1)}
                                         class="bg-green-900 px-4 py-2 text-white mb-2">
@@ -130,6 +129,7 @@ export default function SurahContent() {
                                     {/* /////////////////////// */}
                                     {/* arabic text */}
                                         <div className="p-0 border-t border-gray-200 text-right md:max-w-md">
+                                            <p className="text-left">{index+1}</p>
                                             <p className="text-3xl font-normal font-MushafFont text-right" style={{'font-size':'30px', 'line-height':'4rem'}}>
                                                 {item.arabicText}
                                             </p>
