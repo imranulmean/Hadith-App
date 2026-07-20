@@ -118,7 +118,8 @@ export default function SurahContent() {
                             <div key={index} id={`hadith-${index+1}`}
                                 className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs"
                             >
-                                <div className="flex gap-2 justify-center">
+                                <div className="flex gap-2 justify-center items-start">
+                                    <p className="text-center text-xl mt-2">({index+1})</p>                                    
                                     <button onClick={()=>saveTrack(index+1)}
                                         class="bg-green-900 px-4 py-2 text-white mb-2">
                                         Track Record
@@ -128,8 +129,7 @@ export default function SurahContent() {
                                 <div className="">
                                     {/* /////////////////////// */}
                                     {/* arabic text */}
-                                        <div className="p-0 border-t border-gray-200 text-right md:max-w-md">
-                                            <p className="text-left">{index+1}</p>
+                                        <div className="p-0 border-t border-gray-200 text-right md:max-w-md" >                                            
                                             <p className="text-3xl font-normal font-MushafFont text-right" style={{'font-size':'30px', 'line-height':'4rem'}}>
                                                 {item.arabicText}
                                             </p>
