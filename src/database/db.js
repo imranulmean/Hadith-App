@@ -1,4 +1,6 @@
 import initSqlJs from "sql.js";
+import { Capacitor } from "@capacitor/core";
+import { CapacitorSQLite, SQLiteConnection } from "@capacitor-community/sqlite";
 
 let db = null;
 let dbPromise = null;

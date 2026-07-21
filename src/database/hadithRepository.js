@@ -127,14 +127,6 @@ export async function checkIfTrialEnd() {
 export async function getBooks() {
 
     const db = await openDatabase();
-    // const result = db.exec(` SELECT DISTINCT bookName FROM hadiths ORDER BY bookName `);
-
-    // if(result.length===0)
-    //     return [];
-    // const books = result[0].values.map(row=>({
-    //     name: row[0],
-    //     link: `/hadithContent/${row[0]}`
-    // }));
     const books= getHadits();
     return books
 }

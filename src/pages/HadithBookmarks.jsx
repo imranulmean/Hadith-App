@@ -23,7 +23,8 @@ export default function HadithBookmarks(){
 
     return(<>
             <HeaderLibrary />
-            <Banner/>                
+            <Banner/>
+            <p className="text-gray-400 text-xl text-center p-2">Hadith Bookmark List</p>               
             <div className="flex flex-col justify-start items-center bg-[#0C171A] text-gray-200">
                 <div className="flex gap-2 flex-wrap justify-center p-4">   
                     {
