@@ -207,7 +207,7 @@ export default function HadithContent() {
                                         <div className="mb-3 border-t border-gray-200 text-right md:max-w-md">
                                             {item.arabicText.map((text, i) => (
                                                 <p key={i} style={{'font-size':'30px', 'line-height':'4rem'}}
-                                                className="leading-loose font-MushafFont" dir="rtl" lang="ar">
+                                                className="leading-loose font-QuranFont" dir="rtl" lang="ar">
                                                     {text}
                                                 </p>
                                             ))}

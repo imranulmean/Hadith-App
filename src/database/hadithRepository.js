@@ -152,28 +152,46 @@ function parseJson(value){
 export async function getHadithsContent(bookName, page, limit) {
 
     const db = await openDatabase();
+    const offset = (page - 1) * limit;
+
+    if (Capacitor.isNativePlatform()) {
+
+        const totalResult = await db.query( "SELECT COUNT(*) AS total FROM hadiths WHERE bookName=?", [bookName]);
+
+        const total = totalResult.values[0].total;
+        const totalPages = Math.ceil(total / limit);
+
+        const result = await db.query(
+            ` SELECT id, title, arabicText, banglaText, englishTitle, englishText, hadithNumber FROM hadiths
+            WHERE bookName=? ORDER BY id LIMIT ? OFFSET ? `, [bookName, limit, offset]
+        );
+
+        const rows = result.values.map(row => ({
+            id: row.id,
+            title: row.title,
+            arabicText: parseJson(row.arabicText),
+            banglaText: parseJson(row.banglaText),
+            englishTitle: row.englishTitle,
+            englishText: row.englishText,
+            hadithNumber: row.hadithNumber
+        }));
+
+        return {
+            success: true,
+            message: rows,
+            total,
+            totalPages
+        };
+    }
+    
     // Total
     const totalResult = db.exec(` SELECT COUNT(*) as total FROM hadiths WHERE bookName='${bookName}' `);
 
     const total = totalResult[0].values[0][0];
     const totalPages = Math.ceil(total / limit);
-
-    const offset = (page - 1) * limit;
-
     const result = db.exec(`
-        SELECT
-            id,
-            title,
-            arabicText,
-            banglaText,
-            englishTitle,
-            englishText,
-            hadithNumber
-        FROM hadiths
-        WHERE bookName='${bookName}'
-        ORDER BY id
-        LIMIT ${limit}
-        OFFSET ${offset}
+        SELECT id, title, arabicText, banglaText, englishTitle, englishText, hadithNumber FROM hadiths
+        WHERE bookName='${bookName}' ORDER BY id LIMIT ${limit} OFFSET ${offset}
     `);
 
     let rows = [];
@@ -220,9 +238,22 @@ export async function deleteBookmark(bookmarkIndex){
 export async function getQuranSuras() {
 
     const db = await openDatabase();
+
+    if (Capacitor.isNativePlatform()) {
+
+        const result = await db.query(`SELECT DISTINCT surahHeader, surahNameEng, surahNameBn, surahId FROM quran ORDER BY surahId`);
+
+        return result.values.map(row => ({
+            surahHeader: row.surahHeader,
+            surahNameEng: row.surahNameEng,
+            surahNameBn: row.surahNameBn,
+            surahId: row.surahId,
+            link: `/surahContent/${row.surahId}`
+        }));
+    }    
+    
     const result = db.exec(` SELECT DISTINCT  surahHeader, surahNameEng, surahNameBn, surahId FROM quran ORDER BY id`);    
-    if(result.length===0)
-        return [];
+    if(result.length===0) return [];
     const books = result[0].values.map(row=>({
         surahHeader: row[0],
         surahNameEng: row[1],
@@ -237,24 +268,44 @@ export async function getQuranSuras() {
 export async function getSurahContent(surahId, page) {
 
     const db = await openDatabase();
+
+    if (Capacitor.isNativePlatform()) {
+
+        const totalResult = await db.query( "SELECT COUNT(*) as total FROM quran WHERE surahId=?", [surahId]);
+
+        const total = totalResult.values[0].total;
+
+        const result = await db.query(
+            ` SELECT id, surahHeader, surahNameEng, surahNameBn, ayatNo, arabicText, banglaText, englishText
+            FROM quran WHERE surahId= ? ORDER BY id `, [surahId]
+        );
+
+        const rows = result.values.map(row => ({
+            id: row.id,
+            surahHeader: row.surahHeader,        
+            surahNameEng: parseJson(row.surahNameEng),        
+            surahNameBn: parseJson(row.surahNameBn),        
+            ayatNo: row.ayatNo,        
+            arabicText: row.arabicText,        
+            banglaText: row.banglaText,
+            englishText: row.englishText
+        }));
+
+        return {
+            success: true,
+            message: rows,
+            total            
+        };
+    }    
+    
     // Total
     const totalResult = db.exec(` SELECT COUNT(*) as total FROM quran WHERE surahId='${surahId}' `);
 
     const total = totalResult[0].values[0][0];
 
     const result = db.exec(`
-        SELECT
-            id,
-            surahHeader,
-            surahNameEng,
-            surahNameBn,
-            ayatNo,
-            arabicText,
-            banglaText,
-            englishText
-        FROM quran
-        WHERE surahId='${surahId}'
-        ORDER BY id
+        SELECT id, surahHeader, surahNameEng, surahNameBn, ayatNo, arabicText, banglaText, englishText
+        FROM quran WHERE surahId='${surahId}'ORDER BY id
     `);
 
     let rows = [];

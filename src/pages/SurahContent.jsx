@@ -16,6 +16,8 @@ export default function SurahContent() {
     const [totalPages, setTotalPages] = useState(0);
     const [total, setTotal] = useState(0);
     const [activated, setActivated] = useState(false);
+    const [surahTafsir, setSurahTafsir] = useState([]);
+    const [showSelectedTafsir, setShowSelectedTafsir] = useState(-1);
 
     // ✅ get and set page from URL
     const [searchParams, setSearchParams] = useSearchParams();
@@ -24,7 +26,7 @@ export default function SurahContent() {
     useEffect(() => {
         document.title = 'Islamic Library';        
         getHadiths();
-        window.scrollTo(0,0)        
+        window.scrollTo(0,0)
     }, []);    
 
 
@@ -56,10 +58,16 @@ export default function SurahContent() {
             else{
                 setActivated(true);
             }                      
-            const data = await getSurahContent(surahId, page)
+            const data = await getSurahContent(surahId, page);            
             setHadiths(data.message);
             setTotalPages(data.totalPages);
             setTotal(data.total);
+            const res= await fetch('/allTafsirs.json');
+            const allTafsirs= await res.json();
+            const selectedSuraTafsir= allTafsirs.filter((tafsir)=>{
+                if(tafsir.surahId == surahId) return tafsir;
+            })
+            setSurahTafsir(selectedSuraTafsir);
         } catch (error) {
             alert(error);   
             console.log(error.message)         
@@ -116,7 +124,7 @@ export default function SurahContent() {
                     <div className="flex gap-4 flex-wrap justify-center p-4">
                         {hadiths.map((item, index) => (
                             <div key={index} id={`hadith-${index+1}`}
-                                className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs"
+                                className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs w-full md:w-1/4"
                             >
                                 <div className="flex gap-2 justify-center items-start">
                                     <p className="text-center text-xl mt-2">({index+1})</p>                                    
@@ -130,12 +138,30 @@ export default function SurahContent() {
                                     {/* /////////////////////// */}
                                     {/* arabic text */}
                                         <div className="p-0 border-t border-gray-200 text-right md:max-w-md" >                                            
-                                            <p className="text-3xl font-normal font-MushafFont text-right" style={{'font-size':'30px', 'line-height':'4rem'}}>
+                                            <p className="text-3xl font-normal font-QuranFont text-right" style={{'font-size':'40px', 'line-height':'4rem'}}>
                                                 {item.arabicText}
                                             </p>
-                                            <p className="text-md font-MushafFont" >
-                                                {item.banglaText}
+                                            <p className="text-xl border-b border-gray-200 mb-2" >
+                                                {surahTafsir[index].banglaPron}
                                             </p>                                            
+                                            <p className="text-xl" >
+                                                {item.banglaText}
+                                            </p>
+                                            <p className="text-xl" >
+                                                {item.englishText}
+                                            </p>
+                                            <button onClick={()=>{setShowSelectedTafsir(index)}}
+                                                    class="w-full text-center bg-green-900 px-4 py-2 text-white mb-2 mt-2"
+                                                >See Tafsir | তাফসীর পড়ুন</button>
+                                            {
+                                                (index == showSelectedTafsir) &&
+                                                <p className="text-xl" >
+                                                    {
+                                                        surahTafsir[index].tafsir ? surahTafsir[index].tafsir : "No Tafsir"
+                                                    }
+                                                </p>                                                
+                                            }
+
                                         </div>
                                 </div>
 

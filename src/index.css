@@ -4,44 +4,15 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Kitab';
-  src: url("//cdn.alquran.cloud/public/fonts/Kitab-Regular.ttf");
-}
-
-.font-kitab {
-  font-family: 'Kitab';
-}
-
-@font-face {
-  font-family: 'Kitab Bold';
-  src: url("//cdn.alquran.cloud/public/fonts/Kitab-Bold.ttf");
-}
-
-.font-kitab-bold {
-  font-family: 'Kitab Bold';
-}
-
-
-@font-face {
-    font-family: 'indopak';
-    src: url('AlQuranIndoPakbyQuranWBW.woff') format('woff');
+    font-family: "QuranFont";
+    src: url("/fonts/KFGQPC-Uthmanic-Script-HAFS-Regular.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-.arabic-text{
-  font-family: 'indopak' !important;
-}
-
-@font-face{
-  font-family:arbMushafFont;
-  src:url('arb.woff2') 
-  format("woff2");
-  font-display:swap}
-
-.font-MushafFont {
-    font-family: arbMushafFont,sans-serif
+.font-QuranFont {
+    font-family: "QuranFont";
 }
 
 *{
