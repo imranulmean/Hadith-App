@@ -20,6 +20,7 @@ import { CapacitorSQLite, SQLiteConnection } from "@capacitor-community/sqlite";
 
 //     return dbPromise;
 // }
+
 let db = null;
 let dbPromise = null;
 
@@ -38,7 +39,24 @@ export async function openDatabase() {
 
         sqlite = new SQLiteConnection(CapacitorSQLite);
 
-        const isDb = await sqlite.isDatabase("hadiths", false);        
+        const isDb = await sqlite.isDatabase("hadiths", false);
+
+        // If We want to download the db
+
+        // if (!isDb.result) {
+        //     const response = await fetch(`${BASE_API}/database/hadithsSQLite.db`);
+        //     const blob = await response.blob();
+        
+        //     await writeBlob({
+        //         path: 'databases/hadithsSQLite.db',
+        //         directory: Directory.Data,
+        //         blob,
+        //         recursive: true,
+        //         fast_mode: true
+        //     });
+        // }        
+
+        ///////////////////////////////
         if (!isDb.result) {
             await sqlite.copyFromAssets();
         }
