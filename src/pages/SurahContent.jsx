@@ -155,11 +155,16 @@ export default function SurahContent() {
                                                 >See Tafsir | তাফসীর পড়ুন</button>
                                             {
                                                 (index == showSelectedTafsir) &&
-                                                <p className="text-xl" >
-                                                    {
-                                                        surahTafsir[index].tafsir ? surahTafsir[index].tafsir : "No Tafsir"
-                                                    }
-                                                </p>                                                
+                                                <>
+                                                    <p className="text-xl" >
+                                                        {
+                                                            surahTafsir[index].tafsir ? surahTafsir[index].tafsir : "No Tafsir"
+                                                        }
+                                                    </p>
+                                                    <button onClick={()=>{setShowSelectedTafsir(-1)}}
+                                                            class="w-full text-center bg-green-900 px-4 py-2 text-white mb-2 mt-2"
+                                                            >Close</button>                                                
+                                                </>                                                
                                             }
 
                                         </div>
