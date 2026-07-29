@@ -1,25 +1,35 @@
-import { openDatabase } from "../database/db";
-import { Device } from "@capacitor/device";
-import { Capacitor } from '@capacitor/core';
 import { useEffect, useState } from "react";
-import { checkIfTrialEnd, createHadithAppActivation } from "../database/hadithRepository";
+import { Link, useParams } from "react-router-dom";
 import HeaderLibrary from "../components/HeaderLibrary";
-import Banner from "../components/Banner";
-import { Link } from "react-router-dom";
 import SubjectiveBanner from "../components/SubjectiveBanner";
+import { openDatabase } from "../database/db";
+import { checkIfTrialEnd, createHadithAppActivation } from "../database/hadithRepository";
+import { useSearchParams } from "react-router-dom";
 
-export default function SubjectiveHadiths(){
+export default function Search(){
 
     const [subjectiveHadiths, setSubjectiveHadiths] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [activated, setActivated] = useState(false);    
+    const [activated, setActivated] = useState(true);    
+    const {bookId, chapterId} =  useParams();   
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchHadith, setSearchHadith] = useState(
+        searchParams.get("q") || ""
+    ); 
 
     useEffect(()=>{
         window.scrollTo(0,0)
-        getSubjectiveHadiths();
+        if(searchHadith){
+            getSubjectiveHadiths(searchHadith);
+        }
+        
     },[])
 
-    const getSubjectiveHadiths=async()=>{
+    const getSubjectiveHadiths=async(searchHadith)=>{
+        console.log(searchHadith)
+        if(!searchHadith){
+            alert("please Enter search ")
+        }
         setLoading(true)
         try{
 
@@ -34,39 +44,38 @@ export default function SubjectiveHadiths(){
             } 
     
             const db = await openDatabase();
-            const queryString=`SELECT
-                                bookId,
-                                bookName,
-                                COUNT(DISTINCT chapterId) AS totalChapters
-                            FROM subjectives
-                            GROUP BY
-                                bookId,
-                                bookName
-                            ORDER BY
-                                bookId;`
+    
             if (Capacitor.isNativePlatform()) {
         
-                const result = await db.query(queryString);
+                const result = await db.query(`SELECT bookId, bookName, chapterId, chapterTitle, titleId, chapterTitleIndexName FROM subjectives
+                                             WHERE chapterTitleIndexName LIKE ?`, [`%${searchHadith}%`]);                                    
         
                 const books2= result.values.map(row => ({
                     bookId: row.bookId,
                     bookName: row.bookName,
-                    totalChapters: row.totalChapters,
-                    link: `/subjective/book/${row.bookId}/chapters`                    
+                    chapterId: row.chapterId,
+                    chapterTitle: row.chapterTitle,
+                    titleId:row.titleId,
+                    chapterTitleIndexName: row.chapterTitleIndexName,
+                    link: `/subjective/book/${row.bookId}/chapter/${row.chapterId}/title/${row.titleId}`
                 }));
     
                 setSubjectiveHadiths(books2);
             }    
     
-            const result = db.exec(queryString);
+            const result = db.exec(`SELECT bookId, bookName, chapterId, chapterTitle, titleId, chapterTitleIndexName  FROM subjectives
+                                             WHERE chapterTitleIndexName LIKE '%${searchHadith}%' `);
     
             if(result.length===0) return [];
     
             const books = result[0].values.map(row=>({
-                bookId: row[0],
-                bookName: row[1],
-                totalChapters: row[2],
-                link: `/subjective/book/${row[0]}/chapters`
+                    bookId: row[0],
+                    bookName: row[1],
+                    chapterId: row[2],
+                    chapterTitle: row[3],
+                    titleId:row[4],
+                    chapterTitleIndexName: row[5],
+                    link: `/subjective/book/${row[0]}/chapter/${row[2]}/title/${row[4]}`
             }));
     
             setSubjectiveHadiths(books);
@@ -82,7 +91,6 @@ export default function SubjectiveHadiths(){
         return(
             <>
                 <HeaderLibrary />
-                <SubjectiveBanner />
                 {loading && (
                     <div className="flex justify-center items-start p-10 bg-[#0C171A] text-gray-200 h-screen">
                         <p className="text-lg">Fetching Hadiths...</p>
@@ -104,8 +112,21 @@ export default function SubjectiveHadiths(){
     return(
         <>
             <HeaderLibrary />
-            <SubjectiveBanner title={"হাদীসের কিতাব সমূহ"} />
-
+            {/* <SubjectiveBanner bookName={subjectiveHadiths[0].bookName} 
+                              chapterTitle={`${subjectiveHadiths[0].chapterTitle} - এর পরিচ্ছেদসমূহ`}/> */}
+            <form onSubmit={(e)=>{
+                                e.preventDefault(); 
+                                setSearchParams({ q: searchHadith });
+                                getSubjectiveHadiths(searchHadith)
+                            }} 
+                className="flex flex-col text-gray-200 p-4">
+                <label><Link to='/activationCompo'>বিষয় দিয়ে খুঁজুন:</Link> (যেমন: ঈমান, ওজু, নামায, যাকাত, বিয়ে, তালাক...)  </label>
+                <input type='text' value={searchHadith}  required onChange={(e)=>setSearchHadith(e.target.value)}
+                            className="text-gray-400 rounded-lg bg-[#0C171A] mt-2" />
+                <button type="submit" 
+                    class="bg-green-900 px-4 py-2 text-white mt-2 mb-2">Search</button>                 
+            </form>                              
+                                         
             {loading && (
                 <div className="flex justify-center items-start p-10 bg-[#0C171A] text-gray-200 h-screen">
                     <p className="text-lg">Fetching Hadiths...</p>
@@ -121,8 +142,8 @@ export default function SubjectiveHadiths(){
                                 return(
                                     <Link to ={item.link} class="w-full flex flex-col items-start bg-neutral-primary-soft p-6 border-t border-default rounded-base shadow-xs md:flex-row md:max-w-sm md:flex-row md:max-w-sm">
                                         <div class="flex flex-col justify-between md:p-4 leading-normal">
-                                            <h5 class="mb-2 text-2xl font-semibold tracking-tight text-heading">{item.bookName}</h5>
-                                            <p class="mb-2 text-md font-semibold tracking-tight text-heading">মোট অধ্যায় - {item.totalChapters - 1}</p>
+                                            <h5 class="mb-2 text-2xl font-semibold tracking-tight text-heading">{item.chapterTitleIndexName}</h5>
+                                            {/* <p class="mb-2 text-sm text-gray-400 font-semibold tracking-tight text-heading">মোট হাদীস - {item.total}</p> */}
                                             <div>
                                                 <Link to ={item.link} class="inline-flex items-center w-auto text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">
                                                     Read more

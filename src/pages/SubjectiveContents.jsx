@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import HeaderLibrary from "../components/HeaderLibrary";
 import { openDatabase } from "../database/db";
 import { checkIfTrialEnd, createHadithAppActivation, subjectivesContent } from "../database/hadithRepository";
+import SubjectiveBanner from "../components/SubjectiveBanner";
 
 export default function SubjectiveContents(){
 
@@ -10,7 +11,8 @@ export default function SubjectiveContents(){
     const [loading, setLoading] = useState(false);
     const [activated, setActivated] = useState(false);    
     const {bookId, chapterId, titleId} =  useParams();
-
+    const [bookDetails, setBookDetails] = useState([]);
+    const [totalHadith, setTotalHadith] = useState(0);
 
     useEffect(()=>{
         getSubjectiveHadiths();
@@ -32,6 +34,8 @@ export default function SubjectiveContents(){
     
             const data = await subjectivesContent(bookId, chapterId, titleId);
             setSubjectiveHadiths(data.message);
+            setBookDetails(data.bookDetails)
+            setTotalHadith(data.total)
         }catch(err){
             alert(err.message);
         }
@@ -65,7 +69,7 @@ export default function SubjectiveContents(){
     return(
         <>
             <HeaderLibrary />
-
+            <SubjectiveBanner  bookName={bookDetails[0][0]} chapterTitle={bookDetails[0][1]} chapterTitleIndexName={`${bookDetails[0][2]}, মোট হাদীস - ${totalHadith}`} />
             {loading && (
                 <div className="flex justify-center items-start p-10 bg-[#0C171A] text-gray-200 h-screen">
                     <p className="text-lg">Fetching Hadiths...</p>

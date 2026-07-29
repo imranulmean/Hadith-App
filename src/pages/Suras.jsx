@@ -89,7 +89,7 @@ export default function Suras(){
                     {
                         filtered.map(item=>{
                             return(
-                                <div class="w-full flex flex-col items-start bg-neutral-primary-soft p-6 border-t border-default rounded-base shadow-xs md:flex-row md:max-w-sm md:flex-row md:max-w-sm">
+                                <Link to ={item.link} class="w-full flex flex-col items-start bg-neutral-primary-soft p-6 border-t border-default rounded-base shadow-xs md:flex-row md:max-w-sm md:flex-row md:max-w-sm">
                                     <div class="flex flex-col justify-between md:p-4 leading-normal">
                                         {/* <p class="leading-5 text-md mb-2">{item.surahNameEng} | {item.surahNameBn}</p> */}
                                         <p class="leading-8 text-xl mb-2">{item.surahHeader} </p>
@@ -101,7 +101,7 @@ export default function Suras(){
                                         </div>
                                             
                                     </div>
-                                </div>                            
+                                </Link>                            
                             )
                         })
                     }

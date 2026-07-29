@@ -339,6 +339,7 @@ export async function subjectivesContent(bookId, chapterId, titleId) {
     if (Capacitor.isNativePlatform()) {
 
         const totalResult = await db.query( "SELECT COUNT(*) AS total FROM subjectives WHERE bookId=? AND chapterId=? AND titleId=?", [bookId, chapterId, titleId]);
+        const bookDetails = await db.query( "SELECT distinct bookName, chapterTitle, chapterTitleIndexName FROM subjectives WHERE bookId=? AND chapterId=? AND titleId=?", [bookId, chapterId, titleId]);
 
         const total = totalResult.values[0].total;
 
@@ -360,14 +361,14 @@ export async function subjectivesContent(bookId, chapterId, titleId) {
             success: true,
             message: rows,
             total,
-            totalPages
+            bookDetails: bookDetails.values[0]
         };
     }
     
     // Total
     const totalResult = await db.exec(`SELECT COUNT(*) AS total FROM subjectives WHERE bookId=${bookId} AND chapterId=${chapterId} AND titleId=${titleId}`);
-
     const total = totalResult[0].values[0][0];
+    const bookDetails = await db.exec( "SELECT distinct bookName, chapterTitle, chapterTitleIndexName FROM subjectives WHERE bookId=? AND chapterId=? AND titleId=?", [bookId, chapterId, titleId]);
 
     const result = db.exec(
     `SELECT bookName, chapterTitle, chapterTitleIndexName, contentTitle, banglaTexts, arabicTexts
@@ -390,7 +391,8 @@ export async function subjectivesContent(bookId, chapterId, titleId) {
     return{
         success:true,
         message:rows,
-        total
+        total,
+        bookDetails: bookDetails[0].values
     };
 
 }

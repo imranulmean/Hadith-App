@@ -39,13 +39,24 @@ export default function SubjectiveChapters(){
                 let totalChapter = await db.query(`SELECT  COUNT ( DISTINCT chapterId) AS totalChapter FROM subjectives WHERE bookId=?`, [bookId]);
                 totalChapter = totalChapter.values[0].totalChapter - 1; 
 
-                const result = await db.query(`SELECT DISTINCT chapterId, chapterTitle, bookName FROM subjectives where bookId=? order by chapterId`, [bookId]);
+                const result = await db.query(`SELECT
+                                            chapterId,
+                                            chapterTitle,
+                                            bookName,
+                                            COUNT(DISTINCT titleId) AS totalTitle
+                                        FROM subjectives where bookId=?
+                                        GROUP BY
+                                            chapterId,
+                                            chapterTitle
+                                        ORDER BY
+                                            chapterId`, [bookId]);
         
                 const books2= result.values.map(row => ({
                     chapterId: row.chapterId,
                     chapterTitle: row.chapterTitle,
                     bookName: row.bookName,
                     totalChapter: totalChapter,
+                    totalTitle: row.totalTitle,
                     link: `/subjective/book/${bookId}/chapter/${row.chapterId}/titles`
                 }));
     
@@ -54,7 +65,17 @@ export default function SubjectiveChapters(){
             
             let totalChapter = await db.exec(`SELECT  COUNT ( DISTINCT chapterId) AS totalChapter FROM subjectives WHERE bookId=${bookId}`);
              totalChapter = totalChapter[0].values[0][0] - 1;
-            const result = await db.exec(`SELECT DISTINCT chapterId, chapterTitle, bookName FROM subjectives where bookId=${bookId} order by chapterId`);
+            const result = await db.exec(`SELECT
+                                            chapterId,
+                                            chapterTitle,
+                                            bookName,
+                                            COUNT(DISTINCT titleId) AS totalTitle
+                                        FROM subjectives where bookId=${bookId}
+                                        GROUP BY
+                                            chapterId,
+                                            chapterTitle
+                                        ORDER BY
+                                            chapterId`);
     
             if(result.length===0) return [];
     
@@ -62,6 +83,7 @@ export default function SubjectiveChapters(){
                 chapterId: row[0],
                 chapterTitle: row[1],
                 bookName: row[2],
+                totalTitle:row[3],
                 totalChapter,
                 link: `/subjective/book/${bookId}/chapter/${row[0]}/titles`
             }));
@@ -118,6 +140,7 @@ export default function SubjectiveChapters(){
                                     <Link to ={item.link} class="w-full flex flex-col items-start bg-neutral-primary-soft p-6 border-t border-default rounded-base shadow-xs md:flex-row md:max-w-sm md:flex-row md:max-w-sm">
                                         <div class="flex flex-col justify-between md:p-4 leading-normal">
                                             <h5 class="mb-2 text-2xl font-semibold tracking-tight text-heading">{item.chapterTitle}</h5>
+                                            <p class="mb-2 text-md font-semibold tracking-tight text-heading">মোট পরিচ্ছেদ - {item.totalTitle}</p>                                            
                                             <div>
                                                 <Link to ={item.link} class="inline-flex items-center w-auto text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">
                                                     Read more

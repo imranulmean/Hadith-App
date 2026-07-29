@@ -12,6 +12,7 @@ import SubjectiveHadiths from './pages/SubjectiveHadiths';
 import SubjectiveChapters from './pages/SubjectiveChapters';
 import SubjectiveTitles from './pages/SubjectiveTitles';
 import SubjectiveContents from './pages/SubjectiveContents';
+import Search from './pages/Search';
 
 export default function App(){
    
@@ -31,6 +32,7 @@ export default function App(){
           <Route path='/subjective/book/:bookId/chapters' element={<SubjectiveChapters />} />
           <Route path='/subjective/book/:bookId/chapter/:chapterId/titles' element={<SubjectiveTitles />} />
           <Route path='/subjective/book/:bookId/chapter/:chapterId/title/:titleId' element={<SubjectiveContents />} />
+          <Route path='/search' element={<Search />} />
         </Routes>
       </BrowserRouter>    
 

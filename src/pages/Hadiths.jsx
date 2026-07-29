@@ -85,7 +85,7 @@ export default function Hadiths(){
                             ( hadiths && hadiths.length > 0 ) && 
                             hadiths.map(item=>{
                                 return(
-                                    <div class="w-full flex flex-col items-start bg-neutral-primary-soft p-6 border-t border-default rounded-base shadow-xs md:flex-row md:max-w-sm md:flex-row md:max-w-sm">
+                                    <Link to ={item.link} class="w-full flex flex-col items-start bg-neutral-primary-soft p-6 border-t border-default rounded-base shadow-xs md:flex-row md:max-w-sm md:flex-row md:max-w-sm">
                                         <div class="flex flex-col justify-between md:p-4 leading-normal">
                                             <h5 class="mb-2 text-2xl font-semibold tracking-tight text-heading">{item.nameEnglish} | {item.name}</h5>
                                             <div>
@@ -95,7 +95,7 @@ export default function Hadiths(){
                                                 </Link>
                                             </div>
                                         </div>
-                                    </div>                            
+                                    </Link>                            
                                 )
                             })
                         }
