@@ -132,7 +132,7 @@ export async function getBooks() {
 }
 
 
-function parseJson(value){
+export function parseJson(value){
     if(!value) return [];
     try{
         return JSON.parse(value);
@@ -319,6 +319,70 @@ export async function getSurahContent(surahId, page) {
             arabicText: row[5],        
             banglaText: row[6],
             englishText: row[7]
+        }));
+
+    }
+
+    return{
+        success:true,
+        message:rows,
+        total
+    };
+
+}
+
+
+export async function subjectivesContent(bookId, chapterId, titleId) {
+
+    const db = await openDatabase();
+
+    if (Capacitor.isNativePlatform()) {
+
+        const totalResult = await db.query( "SELECT COUNT(*) AS total FROM subjectives WHERE bookId=? AND chapterId=? AND titleId=?", [bookId, chapterId, titleId]);
+
+        const total = totalResult.values[0].total;
+
+        const result = await db.query(
+            `SELECT bookName, chapterTitle, chapterTitleIndexName, contentTitle, banglaTexts, arabicTexts
+             FROM subjectives WHERE bookId=? AND chapterId=? AND titleId=? `, [bookId, chapterId, titleId]
+        );
+
+        const rows = result.values.map(row => ({
+            bookName: row.bookName,
+            chapterTitle: row.chapterTitle,
+            chapterTitleIndexName:  row.chapterTitleIndexName,
+            contentTitle: row.contentTitle,
+            arabicText: parseJson(row.arabicTexts),
+            banglaText: parseJson(row.banglaTexts),
+        }));
+
+        return {
+            success: true,
+            message: rows,
+            total,
+            totalPages
+        };
+    }
+    
+    // Total
+    const totalResult = await db.exec(`SELECT COUNT(*) AS total FROM subjectives WHERE bookId=${bookId} AND chapterId=${chapterId} AND titleId=${titleId}`);
+
+    const total = totalResult[0].values[0][0];
+
+    const result = db.exec(
+    `SELECT bookName, chapterTitle, chapterTitleIndexName, contentTitle, banglaTexts, arabicTexts
+    FROM subjectives WHERE bookId= ${bookId} AND chapterId= ${chapterId} AND titleId= ${titleId} `
+    );
+
+    let rows = [];
+    if(result.length>0){
+        rows = result[0].values.map(row=>({
+            bookName: row[0],
+            chapterTitle: row[1],
+            chapterTitleIndexName: row[2],
+            contentTitle: row[3],
+            banglaText: parseJson(row[4]),
+            arabicText: parseJson(row[5])
         }));
 
     }

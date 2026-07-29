@@ -8,6 +8,10 @@ import Suras from './pages/Suras';
 import SurahContent from './pages/SurahContent';
 import HadithBookmarks from './pages/HadithBookmarks';
 import BackHandler from './components/BackHandler';
+import SubjectiveHadiths from './pages/SubjectiveHadiths';
+import SubjectiveChapters from './pages/SubjectiveChapters';
+import SubjectiveTitles from './pages/SubjectiveTitles';
+import SubjectiveContents from './pages/SubjectiveContents';
 
 export default function App(){
    
@@ -23,6 +27,10 @@ export default function App(){
           <Route path='/hadithBookmarks' element={<HadithBookmarks />} />
           <Route path='/suras' element={<Suras />} />
           <Route path='/surahContent/:surahId' element={<SurahContent />} />
+          <Route path='/subjectiveHadiths' element={<SubjectiveHadiths />} />
+          <Route path='/subjective/book/:bookId/chapters' element={<SubjectiveChapters />} />
+          <Route path='/subjective/book/:bookId/chapter/:chapterId/titles' element={<SubjectiveTitles />} />
+          <Route path='/subjective/book/:bookId/chapter/:chapterId/title/:titleId' element={<SubjectiveContents />} />
         </Routes>
       </BrowserRouter>    
 

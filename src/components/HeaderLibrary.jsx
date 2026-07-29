@@ -28,8 +28,8 @@ export default function HeaderLibrary(){
                             </li>
 
                             <li>
-                                <Link onClick={() => setMenuOpen(false)} to="/hadiths" 
-                                    className={`rounded-md px-3 py-2 text-sm font-medium ${(location.pathname === '/hadiths') ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Hadiths</Link>
+                                <Link onClick={() => setMenuOpen(false)} to="/subjectiveHadiths" 
+                                    className={`rounded-md px-3 py-2 text-sm font-medium ${(location.pathname === '/subjectiveHadiths') ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Subjective</Link>
                             </li>
                             <li>
                                 <Link onClick={() => setMenuOpen(false)} to="/suras" 
@@ -85,8 +85,8 @@ export default function HeaderLibrary(){
                                     className={`rounded-md px-3 py-2 text-sm font-medium ${( location.pathname === '/') ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Home</Link>
                             </li>                            
                             <li>
-                                <Link onClick={() => setMenuOpen(false)} to="/hadiths" 
-                                    className={`rounded-md px-3 py-2 text-sm font-medium ${( location.pathname === '/hadiths') ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Hadiths</Link>
+                                <Link onClick={() => setMenuOpen(false)} to="/subjectiveHadiths" 
+                                    className={`rounded-md px-3 py-2 text-sm font-medium ${( location.pathname === '/subjectiveHadiths') ? 'text-white border border-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}>Subjective</Link>
                             </li>
                             <li>
                                 <Link onClick={() => setMenuOpen(false)} to="/suras" 
