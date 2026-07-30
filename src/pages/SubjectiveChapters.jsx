@@ -111,8 +111,12 @@ export default function SubjectiveChapters(){
     return(
         <>
             <HeaderLibrary />
-            <SubjectiveBanner title={`${subjectiveHadiths[0].bookName} - এর অধ্যায়সমূহ `} 
-                              subTitle={`${subjectiveHadiths[0].totalChapter} - টি অধ্যায় `} />
+            {
+                subjectiveHadiths.length>0 &&
+                <SubjectiveBanner title={`${subjectiveHadiths[0].bookName} - এর অধ্যায়সমূহ `} 
+                subTitle={`${subjectiveHadiths[0].totalChapter} - টি অধ্যায় `} />                
+            }
+
             {loading && (
                 <div className="flex justify-center items-start p-10 bg-[#0C171A] text-gray-200 h-screen">
                     <p className="text-lg">Fetching Hadiths...</p>
