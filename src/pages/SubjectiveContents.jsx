@@ -78,7 +78,7 @@ export default function SubjectiveContents(){
             {
                 !loading && 
                 <>
-                    <SubjectiveBanner  bookName={bookDetails[0][0]} chapterTitle={bookDetails[0][1]} chapterTitleIndexName={`${bookDetails[0][2]}, মোট হাদীস - ${totalHadith}`} />
+                    <SubjectiveBanner  bookName={bookDetails.bookName} chapterTitle={bookDetails.chapterTitle} chapterTitleIndexName={`${bookDetails.chapterTitleIndexName}, মোট হাদীস - ${totalHadith}`} />
 
                     <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
                         <div className="flex gap-2 flex-wrap justify-center p-4">                    

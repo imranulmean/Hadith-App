@@ -339,9 +339,14 @@ export async function subjectivesContent(bookId, chapterId, titleId) {
     if (Capacitor.isNativePlatform()) {
 
         const totalResult = await db.query( "SELECT COUNT(*) AS total FROM subjectives WHERE bookId=? AND chapterId=? AND titleId=?", [bookId, chapterId, titleId]);
-        const bookDetails = await db.query( "SELECT distinct bookName, chapterTitle, chapterTitleIndexName FROM subjectives WHERE bookId=? AND chapterId=? AND titleId=?", [bookId, chapterId, titleId]);
-
         const total = totalResult.values[0].total;
+
+        const bookDetails = await db.query( "SELECT distinct bookName, chapterTitle, chapterTitleIndexName FROM subjectives WHERE bookId=? AND chapterId=? AND titleId=?", [bookId, chapterId, titleId]);
+        const bookDetailsObj={ 
+            bookName : bookDetails.values[0].bookName,
+            chapterTitle: bookDetails.values[0].chapterTitle,
+            chapterTitleIndexName:bookDetails[0].chapterTitleIndexName
+        }
 
         const result = await db.query(
             `SELECT bookName, chapterTitle, chapterTitleIndexName, contentTitle, banglaTexts, arabicTexts
@@ -361,7 +366,7 @@ export async function subjectivesContent(bookId, chapterId, titleId) {
             success: true,
             message: rows,
             total,
-            bookDetails: bookDetails.values[0]
+            bookDetails: bookDetailsObj
         };
     }
     
@@ -369,6 +374,11 @@ export async function subjectivesContent(bookId, chapterId, titleId) {
     const totalResult = await db.exec(`SELECT COUNT(*) AS total FROM subjectives WHERE bookId=${bookId} AND chapterId=${chapterId} AND titleId=${titleId}`);
     const total = totalResult[0].values[0][0];
     const bookDetails = await db.exec( "SELECT distinct bookName, chapterTitle, chapterTitleIndexName FROM subjectives WHERE bookId=? AND chapterId=? AND titleId=?", [bookId, chapterId, titleId]);
+    const bookDetailsObj={ 
+            bookName : bookDetails[0].values[0][0],
+            chapterTitle: bookDetails[0].values[0][1],
+            chapterTitleIndexName:bookDetails[0].values[0][2]
+        }
 
     const result = db.exec(
     `SELECT bookName, chapterTitle, chapterTitleIndexName, contentTitle, banglaTexts, arabicTexts
@@ -392,7 +402,7 @@ export async function subjectivesContent(bookId, chapterId, titleId) {
         success:true,
         message:rows,
         total,
-        bookDetails: bookDetails[0].values
+        bookDetails: bookDetailsObj
     };
 
 }
