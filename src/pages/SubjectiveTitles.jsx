@@ -4,6 +4,7 @@ import HeaderLibrary from "../components/HeaderLibrary";
 import SubjectiveBanner from "../components/SubjectiveBanner";
 import { openDatabase } from "../database/db";
 import { checkIfTrialEnd, createHadithAppActivation } from "../database/hadithRepository";
+import { Capacitor } from '@capacitor/core';
 
 export default function SubjectiveTitles(){
 
@@ -48,7 +49,7 @@ export default function SubjectiveTitles(){
                     bookName: row.bookName,
                     chapterTitle: row.chapterTitle,
                     total:row.total,
-                    link: `/subjective/book/${bookId}/chapter/${chapterId}/title/${row.titleId}`
+                    link: `/subjective/book/${bookId}/chapter/${chapterId}/title/${row.titleId}/contents`
                 }));
     
                 setSubjectiveHadiths(books2);
@@ -67,7 +68,7 @@ export default function SubjectiveTitles(){
                         bookName: row[2],
                         chapterTitle: row[3],
                         total:row[4],
-                        link: `/subjective/book/${bookId}/chapter/${chapterId}/title/${row[0]}`
+                        link: `/subjective/book/${bookId}/chapter/${chapterId}/title/${row[0]}/contents`
                     }));
             
                     setSubjectiveHadiths(books);

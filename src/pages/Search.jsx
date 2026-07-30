@@ -5,6 +5,7 @@ import SubjectiveBanner from "../components/SubjectiveBanner";
 import { openDatabase } from "../database/db";
 import { checkIfTrialEnd, createHadithAppActivation } from "../database/hadithRepository";
 import { useSearchParams } from "react-router-dom";
+import { Capacitor } from '@capacitor/core';
 
 export default function Search(){
 
@@ -57,7 +58,7 @@ export default function Search(){
                     chapterTitle: row.chapterTitle,
                     titleId:row.titleId,
                     chapterTitleIndexName: row.chapterTitleIndexName,
-                    link: `/subjective/book/${row.bookId}/chapter/${row.chapterId}/title/${row.titleId}`
+                    link: `/subjective/book/${row.bookId}/chapter/${row.chapterId}/title/${row.titleId}/contents`
                 }));
     
                 setSubjectiveHadiths(books2);
@@ -74,7 +75,7 @@ export default function Search(){
                         chapterTitle: row[3],
                         titleId:row[4],
                         chapterTitleIndexName: row[5],
-                        link: `/subjective/book/${row[0]}/chapter/${row[2]}/title/${row[4]}`
+                        link: `/subjective/book/${row[0]}/chapter/${row[2]}/title/${row[4]}/contents`
                     }));
             
                     setSubjectiveHadiths(books);

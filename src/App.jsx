@@ -31,7 +31,7 @@ export default function App(){
           <Route path='/subjectiveHadiths' element={<SubjectiveHadiths />} />
           <Route path='/subjective/book/:bookId/chapters' element={<SubjectiveChapters />} />
           <Route path='/subjective/book/:bookId/chapter/:chapterId/titles' element={<SubjectiveTitles />} />
-          <Route path='/subjective/book/:bookId/chapter/:chapterId/title/:titleId' element={<SubjectiveContents />} />
+          <Route path='/subjective/book/:bookId/chapter/:chapterId/title/:titleId/contents' element={<SubjectiveContents />} />
           <Route path='/search' element={<Search />} />
         </Routes>
       </BrowserRouter>    

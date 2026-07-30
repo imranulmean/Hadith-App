@@ -4,6 +4,7 @@ import HeaderLibrary from "../components/HeaderLibrary";
 import SubjectiveBanner from "../components/SubjectiveBanner";
 import { openDatabase } from "../database/db";
 import { checkIfTrialEnd, createHadithAppActivation } from "../database/hadithRepository";
+import { Capacitor } from '@capacitor/core';
 
 export default function SubjectiveChapters(){
 
