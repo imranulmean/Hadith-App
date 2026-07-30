@@ -70,7 +70,6 @@ export default function SubjectiveContents(){
     return(
         <>
             <HeaderLibrary />
-            <SubjectiveBanner  bookName={bookDetails[0][0]} chapterTitle={bookDetails[0][1]} chapterTitleIndexName={`${bookDetails[0][2]}, মোট হাদীস - ${totalHadith}`} />
             {loading && (
                 <div className="flex justify-center items-start p-10 bg-[#0C171A] text-gray-200 h-screen">
                     <p className="text-lg">Fetching Hadiths...</p>
@@ -78,48 +77,53 @@ export default function SubjectiveContents(){
             )}
             {
                 !loading && 
-                <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
-                    <div className="flex gap-2 flex-wrap justify-center p-4">                    
-                    {subjectiveHadiths.map((item, index) => (
-                            <div key={index} id={`hadith-${index+1}`}
-                                className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs"
-                            >                                
+                <>
+                    <SubjectiveBanner  bookName={bookDetails[0][0]} chapterTitle={bookDetails[0][1]} chapterTitleIndexName={`${bookDetails[0][2]}, মোট হাদীস - ${totalHadith}`} />
+
+                    <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
+                        <div className="flex gap-2 flex-wrap justify-center p-4">                    
+                        {subjectiveHadiths.map((item, index) => (
+                                <div key={index} id={`hadith-${index+1}`}
+                                    className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs"
+                                >                                
 
 
-                                <div className="flex flex-col md:flex-row md:gap-2">
-                                    {/* /////////////////////// */}
-                                    {/* arabic text */}
-                                    {item.arabicText?.length > 0 && (
-                                        <div className="mb-3 border-t border-gray-200 text-right md:max-w-md">
-                                            {item.arabicText.map((text, i) => (
-                                                <p key={i} style={{'font-size':'30px', 'line-height':'4rem'}}
-                                                className="leading-loose font-QuranFont" dir="rtl" lang="ar">
-                                                    {text}
-                                                </p>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {/* bangla text */}
-                                    {
-                                        
-                                        item.banglaText?.length > 0 && (
-                                            <div className="text-sm text-body leading-relaxed md:max-w-md">
-                                                {item.banglaText.map((text, i) => (
-                                                    <p key={i} className="mb-2 text-xl">{text}</p>
+                                    <div className="flex flex-col md:flex-row md:gap-2">
+                                        {/* /////////////////////// */}
+                                        {/* arabic text */}
+                                        {item.arabicText?.length > 0 && (
+                                            <div className="mb-3 border-t border-gray-200 text-right md:max-w-md">
+                                                {item.arabicText.map((text, i) => (
+                                                    <p key={i} style={{'font-size':'30px', 'line-height':'4rem'}}
+                                                    className="leading-loose font-QuranFont" dir="rtl" lang="ar">
+                                                        {text}
+                                                    </p>
                                                 ))}
                                             </div>
-                                        )
-                                        
-                                    }
-                                    {/* ////////////////////// */}
-                                </div>
+                                        )}
 
-                            </div>
-                            
-                        ))}
-                    </div>                    
-                </div>
+                                        {/* bangla text */}
+                                        {
+                                            
+                                            item.banglaText?.length > 0 && (
+                                                <div className="text-sm text-body leading-relaxed md:max-w-md">
+                                                    {item.banglaText.map((text, i) => (
+                                                        <p key={i} className="mb-2 text-xl">{text}</p>
+                                                    ))}
+                                                </div>
+                                            )
+                                            
+                                        }
+                                        {/* ////////////////////// */}
+                                    </div>
+
+                                </div>
+                                
+                            ))}
+                        </div>                    
+                    </div>
+                </>
+
                 
 
             }

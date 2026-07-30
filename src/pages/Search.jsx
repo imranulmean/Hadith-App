@@ -116,8 +116,7 @@ export default function Search(){
     return(
         <>
             <HeaderLibrary />
-            {/* <SubjectiveBanner bookName={subjectiveHadiths[0].bookName} 
-                              chapterTitle={`${subjectiveHadiths[0].chapterTitle} - এর পরিচ্ছেদসমূহ`}/> */}
+
             <form onSubmit={(e)=>{
                                 e.preventDefault(); 
                                 setSearchParams({ q: searchHadith });
