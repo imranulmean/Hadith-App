@@ -34,16 +34,11 @@ export default function SubjectiveHadiths(){
             } 
     
             const db = await openDatabase();
-            const queryString=`SELECT
-                                bookId,
-                                bookName,
+            const queryString=`SELECT bookId, bookName,
                                 COUNT(DISTINCT chapterId) AS totalChapters
-                            FROM subjectives
-                            GROUP BY
-                                bookId,
-                                bookName
-                            ORDER BY
-                                bookId;`
+                                FROM subjectives GROUP BY
+                                bookId, bookName
+                                ORDER BY bookId;`
             if (Capacitor.isNativePlatform()) {
         
                 const result = await db.query(queryString);
@@ -57,19 +52,20 @@ export default function SubjectiveHadiths(){
     
                 setSubjectiveHadiths(books2);
             }    
-    
-            const result = db.exec(queryString);
-    
-            if(result.length===0) return [];
-    
-            const books = result[0].values.map(row=>({
-                bookId: row[0],
-                bookName: row[1],
-                totalChapters: row[2],
-                link: `/subjective/book/${row[0]}/chapters`
-            }));
-    
-            setSubjectiveHadiths(books);
+            
+            else{
+                const result = db.exec(queryString);
+        
+                const books = result[0].values.map(row=>({
+                    bookId: row[0],
+                    bookName: row[1],
+                    totalChapters: row[2],
+                    link: `/subjective/book/${row[0]}/chapters`
+                }));
+        
+                setSubjectiveHadiths(books);
+            }
+
         }catch(err){
             alert(err.message);
         }

@@ -39,17 +39,11 @@ export default function SubjectiveChapters(){
                 let totalChapter = await db.query(`SELECT  COUNT ( DISTINCT chapterId) AS totalChapter FROM subjectives WHERE bookId=?`, [bookId]);
                 totalChapter = totalChapter.values[0].totalChapter - 1; 
 
-                const result = await db.query(`SELECT
-                                            chapterId,
-                                            chapterTitle,
-                                            bookName,
+                const result = await db.query(`SELECT chapterId, chapterTitle, bookName,
                                             COUNT(DISTINCT titleId) AS totalTitle
-                                        FROM subjectives where bookId=?
-                                        GROUP BY
-                                            chapterId,
-                                            chapterTitle
-                                        ORDER BY
-                                            chapterId`, [bookId]);
+                                            FROM subjectives where bookId=?
+                                            GROUP BY chapterId, chapterTitle
+                                            ORDER BY chapterId`, [bookId]);
         
                 const books2= result.values.map(row => ({
                     chapterId: row.chapterId,
@@ -63,32 +57,26 @@ export default function SubjectiveChapters(){
                 setSubjectiveHadiths(books2);
             }    
             
-            let totalChapter = await db.exec(`SELECT  COUNT ( DISTINCT chapterId) AS totalChapter FROM subjectives WHERE bookId=${bookId}`);
-             totalChapter = totalChapter[0].values[0][0] - 1;
-            const result = await db.exec(`SELECT
-                                            chapterId,
-                                            chapterTitle,
-                                            bookName,
+            else{
+                let totalChapter = await db.exec(`SELECT  COUNT ( DISTINCT chapterId) AS totalChapter FROM subjectives WHERE bookId=${bookId}`);
+                totalChapter = totalChapter[0].values[0][0] - 1;
+               const result = await db.exec(`SELECT chapterId, chapterTitle, bookName,
                                             COUNT(DISTINCT titleId) AS totalTitle
-                                        FROM subjectives where bookId=${bookId}
-                                        GROUP BY
-                                            chapterId,
-                                            chapterTitle
-                                        ORDER BY
-                                            chapterId`);
-    
-            if(result.length===0) return [];
-    
-            const books = result[0].values.map(row=>({
-                chapterId: row[0],
-                chapterTitle: row[1],
-                bookName: row[2],
-                totalTitle:row[3],
-                totalChapter,
-                link: `/subjective/book/${bookId}/chapter/${row[0]}/titles`
-            }));
-    
-            setSubjectiveHadiths(books);
+                                            FROM subjectives where bookId=${bookId}
+                                            GROUP BY chapterId, chapterTitle
+                                            ORDER BY chapterId`);
+       
+               const books = result[0].values.map(row=>({
+                   chapterId: row[0],
+                   chapterTitle: row[1],
+                   bookName: row[2],
+                   totalTitle:row[3],
+                   totalChapter,
+                   link: `/subjective/book/${bookId}/chapter/${row[0]}/titles`
+               }));
+       
+               setSubjectiveHadiths(books);
+            }
         }catch(err){
             alert(err.message);
         }

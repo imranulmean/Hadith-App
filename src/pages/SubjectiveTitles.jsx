@@ -36,21 +36,11 @@ export default function SubjectiveTitles(){
     
             if (Capacitor.isNativePlatform()) {
         
-                const result = await db.query(`SELECT
-                                                    titleId,
-                                                    chapterTitleIndexName,
-                                                    bookName,
-                                                    chapterTitle,
-                                                    COUNT(*) AS total
-                                                FROM subjectives
-                                                WHERE bookId = ?
-                                                AND chapterId = ?
-                                                GROUP BY
-                                                    titleId,
-                                                    chapterTitleIndexName,
-                                                    bookName,
-                                                    chapterTitle
-                                                ORDER BY titleId`, [bookId, chapterId]);                                    
+                const result = await db.query(`SELECT titleId, chapterTitleIndexName, bookName, chapterTitle,
+                                                COUNT(*) AS total FROM subjectives
+                                                WHERE bookId = ? AND chapterId = ?
+                                                GROUP BY titleId, chapterTitleIndexName, bookName, chapterTitle
+                                                ORDER BY titleId`, [bookId, chapterId]);
         
                 const books2= result.values.map(row => ({
                     titleId: row.titleId,
@@ -63,35 +53,29 @@ export default function SubjectiveTitles(){
     
                 setSubjectiveHadiths(books2);
             }    
+            else{
+                const result = db.exec(`SELECT titleId, chapterTitleIndexName, bookName, chapterTitle,
+                                        COUNT(*) AS total FROM subjectives
+                                        WHERE bookId = ${bookId} AND chapterId = ${chapterId}
+                                        GROUP BY titleId, chapterTitleIndexName, bookName, chapterTitle
+                                        ORDER BY titleId`);
+                
+                if(result.length>0){
+                    const books = result[0].values.map(row=>({
+                        titleId: row[0],
+                        chapterTitleIndexName: row[1],
+                        bookName: row[2],
+                        chapterTitle: row[3],
+                        total:row[4],
+                        link: `/subjective/book/${bookId}/chapter/${chapterId}/title/${row[0]}`
+                    }));
+            
+                    setSubjectiveHadiths(books);
+                }
+
+            }
     
-            const result = db.exec(`SELECT
-            titleId,
-            chapterTitleIndexName,
-            bookName,
-            chapterTitle,
-            COUNT(*) AS total
-        FROM subjectives
-        WHERE bookId = ${bookId}
-        AND chapterId = ${chapterId}
-        GROUP BY
-            titleId,
-            chapterTitleIndexName,
-            bookName,
-            chapterTitle
-        ORDER BY titleId`);
-    
-            if(result.length===0) return [];
-    
-            const books = result[0].values.map(row=>({
-                titleId: row[0],
-                chapterTitleIndexName: row[1],
-                bookName: row[2],
-                chapterTitle: row[3],
-                total:row[4],
-                link: `/subjective/book/${bookId}/chapter/${chapterId}/title/${row[0]}`
-            }));
-    
-            setSubjectiveHadiths(books);
+
         }catch(err){
             alert(err.message);
         }

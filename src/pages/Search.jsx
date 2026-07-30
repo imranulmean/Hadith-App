@@ -13,20 +13,20 @@ export default function Search(){
     const [activated, setActivated] = useState(true);    
     const {bookId, chapterId} =  useParams();   
     const [searchParams, setSearchParams] = useSearchParams();
-    const [searchHadith, setSearchHadith] = useState(
-        searchParams.get("q") || ""
-    ); 
+    const [searchHadith, setSearchHadith] = useState(""); 
 
-    useEffect(()=>{
+    useEffect(() => {
         window.scrollTo(0,0)
-        if(searchHadith){
-            getSubjectiveHadiths(searchHadith);
+        const q = searchParams.get("q") || "";
+        setSearchHadith(q);
+    
+        if (q) {
+            getSubjectiveHadiths(q);
         }
-        
-    },[])
+    }, [searchParams]);    
 
     const getSubjectiveHadiths=async(searchHadith)=>{
-        console.log(searchHadith)
+        setSubjectiveHadiths([]);
         if(!searchHadith){
             alert("please Enter search ")
         }
@@ -62,28 +62,31 @@ export default function Search(){
     
                 setSubjectiveHadiths(books2);
             }    
-    
-            const result = db.exec(`SELECT bookId, bookName, chapterId, chapterTitle, titleId, chapterTitleIndexName  FROM subjectives
-                                             WHERE chapterTitleIndexName LIKE '%${searchHadith}%' `);
-    
-            if(result.length===0) return [];
-    
-            const books = result[0].values.map(row=>({
-                    bookId: row[0],
-                    bookName: row[1],
-                    chapterId: row[2],
-                    chapterTitle: row[3],
-                    titleId:row[4],
-                    chapterTitleIndexName: row[5],
-                    link: `/subjective/book/${row[0]}/chapter/${row[2]}/title/${row[4]}`
-            }));
-    
-            setSubjectiveHadiths(books);
+            else{                
+                const result = db.exec(`SELECT bookId, bookName, chapterId, chapterTitle, titleId, chapterTitleIndexName  FROM subjectives
+                                                WHERE chapterTitleIndexName LIKE '%${searchHadith}%' `);
+                
+                if(result.length>0){
+                    const books = result[0]?.values.map(row=>({
+                        bookId: row[0],
+                        bookName: row[1],
+                        chapterId: row[2],
+                        chapterTitle: row[3],
+                        titleId:row[4],
+                        chapterTitleIndexName: row[5],
+                        link: `/subjective/book/${row[0]}/chapter/${row[2]}/title/${row[4]}`
+                    }));
+            
+                    setSubjectiveHadiths(books);
+                }
+
+            }
         }catch(err){
             alert(err.message);
         }
         finally{    
-            setLoading(false);    
+            setLoading(false);   
+            // setSearchHadith(""); 
         } 
     }
 
@@ -117,12 +120,14 @@ export default function Search(){
             <form onSubmit={(e)=>{
                                 e.preventDefault(); 
                                 setSearchParams({ q: searchHadith });
-                                getSubjectiveHadiths(searchHadith)
                             }} 
                 className="flex flex-col text-gray-200 p-4">
-                <label><Link to='/activationCompo'>বিষয় দিয়ে খুঁজুন:</Link> (যেমন: ঈমান, ওজু, নামায, যাকাত, বিয়ে, তালাক...)  </label>
-                <input type='text' value={searchHadith}  required onChange={(e)=>setSearchHadith(e.target.value)}
-                            className="text-gray-400 rounded-lg bg-[#0C171A] mt-2" />
+                <label><Link to='/activationCompo'>বিষয় দিয়ে খুঁজুন:</Link> (যেমন: ঈমান, নামায, রোযা, যাকাত, হজ্জ, উযূ, ওজু, গোসল, তায়াম্মুম, বিয়ে, তালাক, হায়েয, হালাল, হারাম, মাকরূহ, সুদ ...)  </label>
+                <input type='text' value={searchHadith}  required
+                        onChange={(e)=>{
+                            setSearchHadith(e.target.value.trim())   
+                        }} 
+                        className="text-gray-400 rounded-lg bg-[#0C171A] mt-2" />
                 <button type="submit" 
                     class="bg-green-900 px-4 py-2 text-white mt-2 mb-2">Search</button>                 
             </form>                              
