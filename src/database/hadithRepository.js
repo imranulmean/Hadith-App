@@ -345,7 +345,7 @@ export async function subjectivesContent(bookId, chapterId, titleId) {
         const bookDetailsObj={ 
             bookName : bookDetails.values[0].bookName,
             chapterTitle: bookDetails.values[0].chapterTitle,
-            chapterTitleIndexName:bookDetails[0].chapterTitleIndexName
+            chapterTitleIndexName:bookDetails.values[0].chapterTitleIndexName
         }
 
         const result = await db.query(
