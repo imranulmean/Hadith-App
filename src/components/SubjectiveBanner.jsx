@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import Jumbotron from "./Jumbotron";
 
 export default function SubjectiveBanner({ title, subTitle, bookName, chapterTitle, chapterTitleIndexName}){
     return(
@@ -15,40 +16,40 @@ export default function SubjectiveBanner({ title, subTitle, bookName, chapterTit
                     <div className="relative z-10 text-center px-4">
                         {
                             title &&
-                            <h1 className="mb-4 text-4xl md:text-6xl font-bold tracking-tight text-white drop-shadow-lg" 
+                            <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-lg" 
                                 style={{'lineHeight':'3rem'}}>
                                 {title}
                             </h1>                            
                         }
                         {
                             subTitle &&
-                            <p className="text-lg md:text-xl text-gray-100 font-medium max-w-2xl mx-auto"
+                            <p className="text-lg text-gray-100 font-medium max-w-2xl mx-auto"
                                 style={{'lineHeight':'3rem'}}>
                                 {subTitle}
                             </p>                            
                         }
                         {
                             bookName &&
-                            <h1 className="mb-4 text-4xl md:text-6xl font-bold tracking-tight text-white drop-shadow-lg"
+                            <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-lg"
                                 style={{'lineHeight':'3rem'}}>
                                 {bookName}
                             </h1>                            
                         }
                         {
                             chapterTitle &&
-                            <p className="text-lg md:text-xl text-gray-100 font-medium max-w-2xl mx-auto"
+                            <p className="text-lg text-gray-100 font-medium max-w-2xl mx-auto"
                                 style={{'lineHeight':'3rem'}}>
                                 {chapterTitle}
                             </p>                            
                         } 
                         {
                             chapterTitleIndexName &&
-                            <p className="text-lg md:text-xl text-gray-100 font-medium max-w-2xl mx-auto"
+                            <p className="text-lg text-gray-100 font-medium max-w-2xl mx-auto"
                                 style={{'lineHeight':'2rem'}}>
                                 {chapterTitleIndexName}
                             </p>                            
                         }                                                
-
+                        <Jumbotron setRemaining={""} trialEnd={"none"}/>
                     </div>
 
                 </div>

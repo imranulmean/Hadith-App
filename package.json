@@ -16,6 +16,8 @@
     "@capacitor/core": "^8.4.1",
     "@capacitor/device": "^8.0.3",
     "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/status-bar": "^8.0.3",
+    "@capgo/capacitor-navigation-bar": "^8.2.6",
     "axios": "^1.13.2",
     "exp-tracker": "file:..",
     "flowbite-react": "^0.10.2",

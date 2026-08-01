@@ -160,17 +160,17 @@ export default function ActivationCompo(){
                         !activated &&
                         <>                        
                             <button onClick={getDevsPhone} disabled={loading}
-                                className="border border-gray-200 p-2 text-sm text-gray-300">Contact
+                                className="rounded-md border border-gray-200 p-2 text-sm text-gray-300">Contact
                             </button>
                             <button onClick={activateNow} disabled={loading}
-                                className="border border-gray-200 p-2 text-sm text-gray-300">Activate Now
+                                className="rounded-md border border-gray-200 p-2 text-sm text-gray-300">Activate Now
                             </button>                         
                         </>
                        
                     }
 
                     <button onClick={()=> navigate('/')} disabled={loading}
-                        className="border border-gray-200 p-2 text-sm text-gray-300">Home
+                        className="rounded-md border border-gray-200 p-2 text-sm text-gray-300">Home
                     </button> 
                 </div>
                {

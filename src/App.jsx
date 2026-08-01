@@ -14,7 +14,34 @@ import SubjectiveTitles from './pages/SubjectiveTitles';
 import SubjectiveContents from './pages/SubjectiveContents';
 import Search from './pages/Search';
 
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { NavigationBar } from '@capgo/capacitor-navigation-bar';
+
 export default function App(){
+
+
+  useEffect(()=>{
+    setupSystemBars();
+  },[])
+
+  async function setupSystemBars() {
+    if (!Capacitor.isNativePlatform()) return;
+
+    // Status bar
+    await StatusBar.setOverlaysWebView({ overlay: false });
+
+    await StatusBar.setBackgroundColor({
+      color: "#164e63", // bg-cyan-900
+    });
+
+
+    // Navigation bar
+    await NavigationBar.setNavigationBarColor({
+      color: "#0c171a",
+      darkButtons: false,
+    });
+  }  
    
   return(
 

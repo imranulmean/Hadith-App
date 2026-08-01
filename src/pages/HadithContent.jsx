@@ -5,6 +5,8 @@ import HeaderLibrary from "../components/HeaderLibrary";
 import PaginationButtons from "../components/PaginationButtons";
 import { checkIfTrialEnd, createHadithAppActivation, getHadithsContent, saveHadithBookmark } from "../database/hadithRepository";
 import ActivationCompo from "./ActivationCompo";
+import SubjectiveBanner from "../components/SubjectiveBanner";
+import localforage from "localforage";
 
 export default function HadithContent() {
 
@@ -21,6 +23,8 @@ export default function HadithContent() {
     const [activated, setActivated] = useState(false);
     const [bookmarkDiv, setBookmarkDiv] = useState();
     const [bookmarkName, setBookmarkName] = useState();
+
+    const [hadithItem, setHaditItem]= useState({nameEnglish:"", name:""});
 
     // ✅ get and set page from URL
     const [searchParams, setSearchParams] = useSearchParams();
@@ -63,8 +67,9 @@ export default function HadithContent() {
             else{
                 setActivated(true);
             }                      
-            const data = await getHadithsContent(book_name, page, LIMIT);
 
+            setHaditItem(await localforage.getItem('hadithItem'));
+            const data = await getHadithsContent(book_name, page, LIMIT);
             setHadiths(data.message);
             setTotalPages(data.totalPages);
             setTotal(data.total);
@@ -145,101 +150,105 @@ export default function HadithContent() {
             )}
 
             {!loading && (
-                <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
+                <>
+                    <SubjectiveBanner bookName={`${hadithItem.nameEnglish} | ${hadithItem.name}`} />
+                    <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
 
-                    {/* total count */}
-                    <div className="w-full flex justify-around md:justify-center gap-2 mt-4 mb-4">
-                        <p className="text-sm text-gray-200 ">
-                            {contentName}
-                        </p>
-                        <p className="text-sm text-gray-200 ">
-                            Showing {(page - 1) * LIMIT + 1}–{Math.min(page * LIMIT, total)} of {total} 
-                        </p>
-                    </div>
-                    
-                    <div className="flex gap-2">
+                        {/* total count */}
+                        <div className="w-full flex justify-around md:justify-center gap-2 mt-4 mb-4">
+                            <p className="text-sm text-gray-200 ">
+                                {contentName}
+                            </p>
+                            <p className="text-sm text-gray-200 ">
+                                Showing {(page - 1) * LIMIT + 1}–{Math.min(page * LIMIT, total)} of {total} 
+                            </p>
+                        </div>
+                        
+                        <div className="flex gap-2">
 
-                    </div>
-                    {/* pagination buttons */}
-                        <PaginationButtons page={page} totalPages={totalPages} changePage={changePage} setLang={setLang}/>
-                    {/* hadith cards */}
-                    <div className="flex gap-4 flex-wrap justify-center p-4">
-                        {hadiths.map((item, index) => (
-                            <div key={index} id={`hadith-${index+1}`}
-                                className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs"
-                            >
-                                {/* title */}
-                                <h5 className="mb-3 text-lg font-semibold tracking-tight text-heading">
+                        </div>
+                        {/* pagination buttons */}
+                            <PaginationButtons page={page} totalPages={totalPages} changePage={changePage} setLang={setLang}/>
+                        {/* hadith cards */}
+                        <div className="flex gap-4 flex-wrap justify-center p-4">
+                            {hadiths.map((item, index) => (
+                                <div key={index} id={`hadith-${index+1}`}
+                                    className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-lg shadow-xs"
+                                >
+                                    {/* title */}
+                                    <h5 className="mb-3 text-lg font-semibold tracking-tight text-heading">
+                                        {
+                                            lang=='bn' ? item.title : item.englishTitle
+                                        }
+                                        <br/>page no:{page}, Hadith:{index+1} 
+                                    </h5>
+                                    <div className="flex gap-2 justify-center">
+                                        <button onClick={()=>saveTrack(index+1)}
+                                            class="rounded-md bg-cyan-900 px-4 py-2 text-white mb-2">
+                                            Track Record
+                                        </button>
+                                        <button onClick={()=>openBookmark(index)}
+                                            class="rounded-md bg-cyan-900 px-4 py-2 text-white mb-2">
+                                            Save 
+                                        </button>
+                                    </div>
                                     {
-                                        lang=='bn' ? item.title : item.englishTitle
+                                        index == bookmarkDiv &&
+                                        <div className="flex flex-col mb-2 gap-2">
+                                            <label>Bookmark Name:</label>
+                                            <input type='text' onChange={(e)=>setBookmarkName(e.target.value)}
+                                                    className="text-gray-400 rounded-lg bg-[#0C171A]" />
+                                            <button onClick={()=>saveBookmark(index+1)}
+                                                class="rounded-md bg-cyan-900 px-4 py-2 text-white mb-2">
+                                                Save Bookmark
+                                            </button>                                        
+                                        </div>                                    
+
                                     }
-                                    <br/>page no:{page}, Hadith:{index+1} 
-                                </h5>
-                                <div className="flex gap-2 justify-center">
-                                    <button onClick={()=>saveTrack(index+1)}
-                                        class="bg-green-900 px-4 py-2 text-white mb-2">
-                                        Track Record
-                                    </button>
-                                    <button onClick={()=>openBookmark(index)}
-                                        class="bg-green-900 px-4 py-2 text-white mb-2">
-                                        Save 
-                                    </button>
-                                </div>
-                                {
-                                    index == bookmarkDiv &&
-                                    <div className="flex flex-col mb-2 gap-2">
-                                        <label>Bookmark Name:</label>
-                                        <input type='text' onChange={(e)=>setBookmarkName(e.target.value)}
-                                                className="text-gray-400 rounded-lg bg-[#0C171A]" />
-                                        <button onClick={()=>saveBookmark(index+1)}
-                                            class="bg-green-900 px-4 py-2 text-white mb-2">
-                                            Save Bookmark
-                                        </button>                                        
-                                    </div>                                    
-
-                                }
 
 
-                                <div className="flex flex-col md:flex-row md:gap-2">
-                                    {/* /////////////////////// */}
-                                    {/* arabic text */}
-                                    {item.arabicText?.length > 0 && (
-                                        <div className="mb-3 border-t border-gray-200 text-right md:max-w-md">
-                                            {item.arabicText.map((text, i) => (
-                                                <p key={i} style={{'font-size':'30px', 'line-height':'4rem'}}
-                                                className="leading-loose font-QuranFont" dir="rtl" lang="ar">
-                                                    {text}
-                                                </p>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {/* bangla text */}
-                                    {lang === 'bn' ? (
-                                        item.banglaText?.length > 0 && (
-                                            <div className="text-sm text-body leading-relaxed md:max-w-md">
-                                                {item.banglaText.map((text, i) => (
-                                                    <p key={i} className="mb-2 text-xl">{text}</p>
+                                    <div className="flex flex-col md:flex-row md:gap-2">
+                                        {/* /////////////////////// */}
+                                        {/* arabic text */}
+                                        {item.arabicText?.length > 0 && (
+                                            <div className="mb-3 border-t border-gray-200 text-right md:max-w-md">
+                                                {item.arabicText.map((text, i) => (
+                                                    <p key={i} style={{'font-size':'30px', 'line-height':'4rem'}}
+                                                    className="leading-loose font-QuranFont" dir="rtl" lang="ar">
+                                                        {text}
+                                                    </p>
                                                 ))}
                                             </div>
-                                        )
-                                    ) : (
-                                        <div className="text-sm text-body leading-relaxed md:max-w-md">
-                                            <p className="mb-2 text-xl">{item.englishText}</p>
-                                        </div>
-                                    )}
-                                    {/* ////////////////////// */}
+                                        )}
+
+                                        {/* bangla text */}
+                                        {lang === 'bn' ? (
+                                            item.banglaText?.length > 0 && (
+                                                <div className="text-sm text-body leading-relaxed md:max-w-md">
+                                                    {item.banglaText.map((text, i) => (
+                                                        <p key={i} className="mb-2 text-xl">{text}</p>
+                                                    ))}
+                                                </div>
+                                            )
+                                        ) : (
+                                            <div className="text-sm text-body leading-relaxed md:max-w-md">
+                                                <p className="mb-2 text-xl">{item.englishText}</p>
+                                            </div>
+                                        )}
+                                        {/* ////////////////////// */}
+                                    </div>
+
                                 </div>
+                                
+                            ))}
+                        </div>
 
-                            </div>
-                            
-                        ))}
-                    </div>
+                        {/* pagination buttons */}
+                        <PaginationButtons page={page} totalPages={totalPages} changePage={changePage} />
 
-                    {/* pagination buttons */}
-                    <PaginationButtons page={page} totalPages={totalPages} changePage={changePage} />
+                    </div>                
+                </>
 
-                </div>
             )}
         </>
     );

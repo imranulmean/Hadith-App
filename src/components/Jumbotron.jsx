@@ -17,7 +17,10 @@ export default function Jumbotron({setRemaining, trialEnd}){
 
         const update = () => {
             setTime(new Date().toLocaleTimeString());
-            trialRemaining(trialEnd);
+            if(trialEnd!=="none"){
+                trialRemaining(trialEnd);
+            }
+            
         };
 
         update(); // update immediately
@@ -51,7 +54,7 @@ export default function Jumbotron({setRemaining, trialEnd}){
     }
     return(
         <>
-            <div className="w-full flex flex-col bg-gray-900 py-2">
+            <div className="w-full flex flex-col py-2">
                 <div className="w-full flex justify-center items-center gap-2">
                     <p className="text-sm font-normal text-white">
                         {date}

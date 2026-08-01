@@ -5,6 +5,7 @@ import HeaderLibrary from "../components/HeaderLibrary";
 import PaginationButtons from "../components/PaginationButtons";
 import { checkIfTrialEnd, createHadithAppActivation, getHadithsContent, getSurahContent } from "../database/hadithRepository";
 import ActivationCompo from "./ActivationCompo";
+import SubjectiveBanner from "../components/SubjectiveBanner";
 
 export default function SurahContent() {
 
@@ -116,65 +117,68 @@ export default function SurahContent() {
             )}
 
             {!loading && (
-                <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
-                    {/* title */}
-                    <h5 className="p-2 mb-3 text-md font-semibold tracking-tight text-heading">
-                        {hadiths[0].surahHeader} <br/> 
-                    </h5>                    
-                    <div className="flex gap-4 flex-wrap justify-center p-4">
-                        {hadiths.map((item, index) => (
-                            <div key={index} id={`hadith-${index+1}`}
-                                className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs w-full md:w-1/4"
-                            >
-                                <div className="flex gap-2 justify-center items-start">
-                                    <p className="text-center text-xl mt-2">({index+1})</p>                                    
-                                    <button onClick={()=>saveTrack(index+1)}
-                                        class="bg-green-900 px-4 py-2 text-white mb-2">
-                                        Track Record
-                                    </button>
+                <>
+                    <SubjectiveBanner title={hadiths[0].surahHeader}/>
+                    <div className="flex flex-col justify-center items-center bg-[#0C171A] text-gray-200">
+                        {/* title */}
+                        {/* <h5 className="p-2 mb-3 text-md font-semibold tracking-tight text-heading">
+                            {hadiths[0].surahHeader} <br/> 
+                        </h5>                     */}
+                        <div className="flex gap-4 flex-wrap justify-center p-4">
+                            {hadiths.map((item, index) => (
+                                <div key={index} id={`hadith-${index+1}`}
+                                    className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-lg shadow-xs w-full md:w-1/4"
+                                >
+                                    <div className="flex gap-2 justify-center items-start">
+                                        <p className="text-center text-xl mt-2">({index+1})</p>                                    
+                                        <button onClick={()=>saveTrack(index+1)}
+                                            class="rounded-md bg-cyan-900 px-4 py-2 text-white mb-2">
+                                            Track Record
+                                        </button>
+                                    </div>
+                                    
+                                    <div className="">
+                                        {/* /////////////////////// */}
+                                        {/* arabic text */}
+                                            <div className="p-0 border-t border-gray-200 text-right md:max-w-md" >                                            
+                                                <p className="text-3xl font-normal font-QuranFont text-right" style={{'font-size':'40px', 'line-height':'4rem'}}>
+                                                    {item.arabicText}
+                                                </p>
+                                                <p className="text-xl border-b border-gray-200 mb-2" >
+                                                    {surahTafsir[index].banglaPron}
+                                                </p>                                            
+                                                <p className="text-xl" >
+                                                    {item.banglaText}
+                                                </p>
+                                                <p className="text-xl" >
+                                                    {item.englishText}
+                                                </p>
+                                                <button onClick={()=>{setShowSelectedTafsir(index)}}
+                                                        class="rounded-md w-full text-center bg-cyan-900 px-4 py-2 text-white mb-2 mt-2"
+                                                    >See Tafsir | তাফসীর পড়ুন</button>
+                                                {
+                                                    (index == showSelectedTafsir) &&
+                                                    <>
+                                                        <p className="text-xl" >
+                                                            {
+                                                                surahTafsir[index].tafsir ? surahTafsir[index].tafsir : "No Tafsir"
+                                                            }
+                                                        </p>
+                                                        <button onClick={()=>{setShowSelectedTafsir(-1)}}
+                                                                class="rounded-md w-full text-center bg-cyan-900 px-4 py-2 text-white mb-2 mt-2"
+                                                                >Close</button>                                                
+                                                    </>                                                
+                                                }
+
+                                            </div>
+                                    </div>
+
                                 </div>
                                 
-                                <div className="">
-                                    {/* /////////////////////// */}
-                                    {/* arabic text */}
-                                        <div className="p-0 border-t border-gray-200 text-right md:max-w-md" >                                            
-                                            <p className="text-3xl font-normal font-QuranFont text-right" style={{'font-size':'40px', 'line-height':'4rem'}}>
-                                                {item.arabicText}
-                                            </p>
-                                            <p className="text-xl border-b border-gray-200 mb-2" >
-                                                {surahTafsir[index].banglaPron}
-                                            </p>                                            
-                                            <p className="text-xl" >
-                                                {item.banglaText}
-                                            </p>
-                                            <p className="text-xl" >
-                                                {item.englishText}
-                                            </p>
-                                            <button onClick={()=>{setShowSelectedTafsir(index)}}
-                                                    class="w-full text-center bg-green-900 px-4 py-2 text-white mb-2 mt-2"
-                                                >See Tafsir | তাফসীর পড়ুন</button>
-                                            {
-                                                (index == showSelectedTafsir) &&
-                                                <>
-                                                    <p className="text-xl" >
-                                                        {
-                                                            surahTafsir[index].tafsir ? surahTafsir[index].tafsir : "No Tafsir"
-                                                        }
-                                                    </p>
-                                                    <button onClick={()=>{setShowSelectedTafsir(-1)}}
-                                                            class="w-full text-center bg-green-900 px-4 py-2 text-white mb-2 mt-2"
-                                                            >Close</button>                                                
-                                                </>                                                
-                                            }
-
-                                        </div>
-                                </div>
-
-                            </div>
-                            
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                </div>
+                </>
             )}
         </>
     );

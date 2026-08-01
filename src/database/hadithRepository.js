@@ -283,14 +283,14 @@ export async function getSurahContent(surahId, page) {
         const rows = result.values.map(row => ({
             id: row.id,
             surahHeader: row.surahHeader,        
-            surahNameEng: parseJson(row.surahNameEng),        
-            surahNameBn: parseJson(row.surahNameBn),        
+            surahNameEng: row.surahNameEng,        
+            surahNameBn: row.surahNameBn,        
             ayatNo: row.ayatNo,        
             arabicText: row.arabicText,        
             banglaText: row.banglaText,
             englishText: row.englishText
         }));
-
+        
         return {
             success: true,
             message: rows,
@@ -313,8 +313,8 @@ export async function getSurahContent(surahId, page) {
         rows = result[0].values.map(row=>({
             id: row[0],
             surahHeader: row[1],        
-            surahNameEng: parseJson(row[2]),        
-            surahNameBn: parseJson(row[3]),        
+            surahNameEng: row[2],        
+            surahNameBn: row[3],        
             ayatNo: row[4],        
             arabicText: row[5],        
             banglaText: row[6],
@@ -322,7 +322,6 @@ export async function getSurahContent(surahId, page) {
         }));
 
     }
-
     return{
         success:true,
         message:rows,

@@ -84,7 +84,7 @@ export default function SubjectiveContents(){
                         <div className="flex gap-2 flex-wrap justify-center p-4">                    
                         {subjectiveHadiths.map((item, index) => (
                                 <div key={index} id={`hadith-${index+1}`}
-                                    className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-base shadow-xs"
+                                    className="flex flex-col bg-neutral-primary-soft p-2 border border-default rounded-lg shadow-xs"
                                 >                                
 
 
@@ -92,7 +92,7 @@ export default function SubjectiveContents(){
                                         {/* /////////////////////// */}
                                         {/* arabic text */}
                                         {item.arabicText?.length > 0 && (
-                                            <div className="mb-3 border-t border-gray-200 text-right md:max-w-md">
+                                            <div className="mb-3 text-right md:max-w-md">
                                                 {item.arabicText.map((text, i) => (
                                                     <p key={i} style={{'font-size':'30px', 'line-height':'4rem'}}
                                                     className="leading-loose font-QuranFont" dir="rtl" lang="ar">
