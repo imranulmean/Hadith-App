@@ -265,7 +265,7 @@ export async function getQuranSuras() {
     return books
 }
 
-export async function getSurahContent(surahId, page) {
+export async function getSurahContent(surahId) {
 
     const db = await openDatabase();
 

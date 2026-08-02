@@ -42,18 +42,25 @@ export default function HadithContent() {
     // Go to users tracked hadith    
     useEffect(() => {
 
+        if (hadiths.length > 0) {
+            goToTrackedHadith();
+        }       
+    }, [hadiths]);    
+
+    const goToTrackedHadith = () => {
         const params = new URLSearchParams(location.search);
-        const hadithId = params.get('hadithIndex');
+        const hadithId = params.get("hadithIndex");
     
-        if (hadiths.length > 0 && hadithId) {
+        if (!hadithId) return;
+        const interval= setInterval(()=>{
             const el = document.getElementById(`hadith-${hadithId}`);
             if (el) {
-                setTimeout(() => {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+                el.scrollIntoView({ behavior: "smooth", block: "start", });
+                clearInterval(interval)
             }
-        }        
-    }, [hadiths]);    
+        },100);
+
+    };    
 
     const getHadiths = async () => {
         setLoading(true);  

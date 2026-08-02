@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSearchParams } from 'react-router-dom';
 import HeaderLibrary from "../components/HeaderLibrary";
-import PaginationButtons from "../components/PaginationButtons";
 import { checkIfTrialEnd, createHadithAppActivation, getHadithsContent, getSurahContent } from "../database/hadithRepository";
 import ActivationCompo from "./ActivationCompo";
 import SubjectiveBanner from "../components/SubjectiveBanner";
@@ -13,16 +12,12 @@ export default function SurahContent() {
     const { surahId } = useParams();
 
     const [hadiths, setHadiths] = useState([]);
+    const [total, setTotal]= useState(-1)
     const [loading, setLoading] = useState(false);
-    const [totalPages, setTotalPages] = useState(0);
-    const [total, setTotal] = useState(0);
     const [activated, setActivated] = useState(false);
     const [surahTafsir, setSurahTafsir] = useState([]);
     const [showSelectedTafsir, setShowSelectedTafsir] = useState(-1);
 
-    // ✅ get and set page from URL
-    const [searchParams, setSearchParams] = useSearchParams();
-    const page = parseInt(searchParams.get('page')) || 1;
 
     useEffect(() => {
         document.title = 'Islamic Library';        
@@ -33,19 +28,25 @@ export default function SurahContent() {
 
     // Go to users tracked hadith    
     useEffect(() => {
+        if (hadiths.length > 0) {
+            goToTrackedAyat();
+        }
+    }, [hadiths]);  
 
+    const goToTrackedAyat = () => {
         const params = new URLSearchParams(location.search);
-        const hadithId = params.get('hadithIndex');
+        const hadithId = params.get("hadithIndex");
     
-        if (hadiths.length > 0 && hadithId) {
+        if (!hadithId) return;
+        const interval= setInterval(()=>{
             const el = document.getElementById(`hadith-${hadithId}`);
             if (el) {
-                setTimeout(() => {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+                el.scrollIntoView({ behavior: "smooth", block: "start", });
+                clearInterval(interval)
             }
-        }        
-    }, [hadiths]);    
+        },100);
+
+    };
 
     const getHadiths = async () => {
         setLoading(true);  
@@ -59,9 +60,8 @@ export default function SurahContent() {
             else{
                 setActivated(true);
             }                      
-            const data = await getSurahContent(surahId, page);            
+            const data = await getSurahContent(surahId);          
             setHadiths(data.message);
-            setTotalPages(data.totalPages);
             setTotal(data.total);
             const res= await fetch('/allTafsirs.json');
             const allTafsirs= await res.json();
@@ -69,6 +69,7 @@ export default function SurahContent() {
                 if(tafsir.surahId == surahId) return tafsir;
             })
             setSurahTafsir(selectedSuraTafsir);
+
         } catch (error) {
             alert(error);   
             console.log(error.message)         
