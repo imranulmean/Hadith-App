@@ -11,8 +11,24 @@ localforage.config({
     storeName: "HadithAppStore"
 });
 
+const APP_SECRET = "90f6cfa8-3eeb-462a-af1f-a1375c8c7c9e";
+
+export function createChecksum(obj) {
+    // Collect core fields to sign
+    const raw = `${obj.deviceId}_${obj.firstInstall}_${obj.trialStart}_${obj.trialEnd}_${obj.activated}_${APP_SECRET}`;
+    let hash = 0;
+    for (let i = 0; i < raw.length; i++) {
+        hash = (hash << 5) - hash + raw.charCodeAt(i);
+        hash |= 0;
+    }
+
+    return hash.toString();
+}
+
 export async function setDataLocalForge(data){
-    await localforage.setItem('hadithAppActivation', data);
+    const activationData= data;
+    activationData.checksum = createChecksum(data)
+    await localforage.setItem('hadithAppActivation', activationData);
 }
 
 export async function getDataLocalForge(){
@@ -73,7 +89,7 @@ export async function createHadithAppActivation(){
             deviceId: identifier
         }
 
-        const hadithAppActivation= await localforage.getItem('hadithAppActivation');
+        const hadithAppActivation= await localforage.getItem('hadithAppActivation');        
         if(!hadithAppActivation){
             // Register device with server
             const res = await fetch(`${BASE_API}/hadithApp/checkActivation`,{
@@ -85,7 +101,9 @@ export async function createHadithAppActivation(){
             });
             const data = await res.json();
             if(data.success){
-                await localforage.setItem('hadithAppActivation', data.data);
+                const activationData= data.data;
+                activationData.checksum = createChecksum(activationData);
+                await localforage.setItem('hadithAppActivation', activationData);
                 console.log("First installation completed.");
             }            
         }
@@ -99,8 +117,16 @@ export async function checkIfTrialEnd() {
 
     if (!activation) {
         return false;
-    }     
-    // Already inactive
+    }
+    if( !activation.checksum ){
+        return false;
+    }
+
+    const expectedChecksum = createChecksum(activation);
+    if( activation.checksum !== expectedChecksum){
+        return false;
+    }
+
     if (activation.activated !== 1) {
         return false;
     }
@@ -118,6 +144,7 @@ export async function checkIfTrialEnd() {
     // Trial expired
     if (new Date() > trialEnd) {
         activation.activated=0
+        activation.checksum = createChecksum(activation);
         await localforage.setItem('hadithAppActivation', activation); 
         return false;
     }
