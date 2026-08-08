@@ -17,6 +17,10 @@ import Search from './pages/Search';
 import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { NavigationBar } from '@capgo/capacitor-navigation-bar';
+import Ayat_E_Shifa from './pages/Ayats/Ayat_E_Shifa';
+import RizqDua from './pages/Ayats/RizqDua';
+import RabbanaDuas from './pages/Ayats/RabbanaDuas';
+import NamazImportance from './pages/Ayats/NamazImportance';
 
 export default function App(){
 
@@ -60,6 +64,10 @@ export default function App(){
           <Route path='/subjective/book/:bookId/chapter/:chapterId/titles' element={<SubjectiveTitles />} />
           <Route path='/subjective/book/:bookId/chapter/:chapterId/title/:titleId/contents' element={<SubjectiveContents />} />
           <Route path='/search' element={<Search />} />
+          <Route path='/ayats/ayat_e_shifa' element={<Ayat_E_Shifa />} />
+          <Route path='/ayats/rizqDua' element={<RizqDua />} />
+          <Route path='/ayats/rabbana_duas' element={<RabbanaDuas />} />
+          <Route path='/ayats/importance_of_namaz' element={<NamazImportance />} />
         </Routes>
       </BrowserRouter>    
 
