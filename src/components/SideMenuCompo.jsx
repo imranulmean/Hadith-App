@@ -1,16 +1,16 @@
 import { Button, Drawer, Sidebar, TextInput } from "flowbite-react";
-import { useState } from "react";
-import {
-  HiPencilAlt,
-} from "react-icons/hi";
+import { useEffect, useState } from "react";
+import { HiPencilAlt, HiCheck } from "react-icons/hi";
 import { FaAlignJustify } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export default function SideMenuCompo(){
-    const [isOpen, setIsOpen] = useState(false);
 
+    const [isOpen, setIsOpen] = useState(false);
     const handleClose = () => setIsOpen(false);
-  
+    const {pathname} = useLocation();
+    
+
     return (
       <>
         <div className="flex items-center justify-center">
@@ -19,7 +19,8 @@ export default function SideMenuCompo(){
           </button>
         </div>
         <Drawer open={isOpen} onClose={handleClose} className="bg-cyan-900">
-          <Drawer.Header title={<span className="text-white">MENU</span>} className="border-b border-default" titleIcon={() => <></>} />
+          <Drawer.Header title={<span className="text-white">MENU</span>} 
+                        className="border-b border-default" titleIcon={() => <></>} />
           <Drawer.Items>
             <Sidebar aria-label="Sidebar with multi-level dropdown example"
                       className="[&>div]:bg-transparent [&>div]:p-0 w-full"
@@ -28,20 +29,50 @@ export default function SideMenuCompo(){
                 <div>
                   <Sidebar.Items>
                     <Sidebar.ItemGroup>
+                      <Link to="/ayats/ayat_e_shifa" className="block">
+                          <Sidebar.Item
+                              icon={HiPencilAlt}
+                              className="text-white [&>svg]:text-white border-b border-default rounded-none hover:bg-cyan-900 text-white"
+                          >
+                              রোগ মুক্তির আয়াত {pathname.includes('ayat_e_shifa') ? <HiCheck className="inline ml-1" /> : '' }
+                          </Sidebar.Item>
+                      </Link>
 
-                      <Sidebar.Item icon={HiPencilAlt} className="text-white [&>svg]:text-white border-b border-default rounded-none">
-                        <Link to='/ayats/ayat_e_shifa'>রোগ মুক্তির আয়াত</Link>                        
-                      </Sidebar.Item>
-                      <Sidebar.Item icon={HiPencilAlt} className="text-white [&>svg]:text-white border-b border-default rounded-none">
-                        <Link to='/ayats/rizqDua'>রিজিকের দোয়া</Link>                        
-                      </Sidebar.Item>
-                      <Sidebar.Item icon={HiPencilAlt} className="text-white [&>svg]:text-white border-b border-default rounded-none">
-                        <Link to='/ayats/rabbana_duas'>রব্বানা দোয়া (৪০টি দোয়া)</Link>                        
-                      </Sidebar.Item>                      
-                      <Sidebar.Item icon={HiPencilAlt} className="text-white [&>svg]:text-white border-b border-default rounded-none">
-                        <Link to='/ayats/importance_of_namaz'>নামাজের গুরুত্ব ও ফজিলত</Link> 						
-                      </Sidebar.Item>
+                      <Link to="/ayats/rizqDua" className="block">
+                          <Sidebar.Item
+                              icon={HiPencilAlt}
+                              className="text-white [&>svg]:text-white border-b border-default rounded-none hover:bg-cyan-900 text-white"
+                          >
+                              রিজিকের দোয়া {pathname.includes('rizqDua') ? <HiCheck className="inline ml-1" /> : '' }
+                          </Sidebar.Item>
+                      </Link>
 
+                      <Link to="/ayats/rabbana_duas" className="block">
+                          <Sidebar.Item
+                              icon={HiPencilAlt}
+                              className="text-white [&>svg]:text-white border-b border-default rounded-none hover:bg-cyan-900 text-white"
+                          >
+                              রব্বানা দোয়া (৪০টি দোয়া) {pathname.includes('rabbana_duas') ? <HiCheck className="inline ml-1" /> : '' }
+                          </Sidebar.Item>
+                      </Link>
+
+                      <Link to="/ayats/importance_of_namaz" className="block">
+                          <Sidebar.Item
+                              icon={HiPencilAlt}
+                              className="text-white [&>svg]:text-white border-b border-default rounded-none hover:bg-cyan-900 text-white"
+                          >
+                              নামাজের গুরুত্ব ও ফজিলত {pathname.includes('importance_of_namaz') ? <HiCheck className="inline ml-1" /> : '' }
+                          </Sidebar.Item>
+                      </Link>
+
+                      <Link to="/ayats/getHadithBlogs" className="block">
+                          <Sidebar.Item
+                              icon={HiPencilAlt}
+                              className="text-white [&>svg]:text-white border-b border-default rounded-none hover:bg-cyan-900 text-white"
+                          >
+                              ইসলামিক ব্লগ {pathname.includes('getHadithBlogs') ? <HiCheck className="inline ml-1" /> : '' }
+                          </Sidebar.Item>
+                      </Link>
                     </Sidebar.ItemGroup>
                   </Sidebar.Items>
                 </div>

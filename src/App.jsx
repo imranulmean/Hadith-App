@@ -21,6 +21,8 @@ import Ayat_E_Shifa from './pages/Ayats/Ayat_E_Shifa';
 import RizqDua from './pages/Ayats/RizqDua';
 import RabbanaDuas from './pages/Ayats/RabbanaDuas';
 import NamazImportance from './pages/Ayats/NamazImportance';
+import GetHadithBlogs from './pages/Ayats/GetHadithBlogs';
+import UpdateHadithBlog from './pages/Ayats/UpdateHadithBlog';
 
 export default function App(){
 
@@ -68,6 +70,8 @@ export default function App(){
           <Route path='/ayats/rizqDua' element={<RizqDua />} />
           <Route path='/ayats/rabbana_duas' element={<RabbanaDuas />} />
           <Route path='/ayats/importance_of_namaz' element={<NamazImportance />} />
+          <Route path='/ayats/getHadithBlogs' element={<GetHadithBlogs />} />
+          <Route path='/ayats/updateHadithBlog/:id' element={<UpdateHadithBlog />} />
         </Routes>
       </BrowserRouter>    
 

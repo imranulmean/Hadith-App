@@ -39,7 +39,7 @@ const namazImportanceData = [
             <CheckActivationCompo>
                 <div className="p-4">
                     <div class="w-full flex flex-col">
-                        <h5 class="w-full mb-2 text-md font-medium tracking-tight text-right text-gray-200">
+                        <h5 class="w-full mb-2 text-md font-medium tracking-tight text-center text-gray-200">
                             "নামাজ কেবল একটি ইবাদত নয়, এটি সৃষ্টি এবং সৃষ্টিকর্তার মধ্যকার সরাসরি কথোপকথন। যখন আপনি সেজদায় যান, আপনি মাটির সবচেয়ে কাছে থাকেন—কিন্তু রুহানিভাবে থাকেন আরশের সবচেয়ে কাছে।"
                         </h5>
 
