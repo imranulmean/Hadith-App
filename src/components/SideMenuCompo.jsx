@@ -70,7 +70,7 @@ export default function SideMenuCompo(){
                               icon={HiPencilAlt}
                               className="text-white [&>svg]:text-white border-b border-default rounded-none hover:bg-cyan-900 text-white"
                           >
-                              ইসলামিক ব্লগ {pathname.includes('getHadithBlogs') ? <HiCheck className="inline ml-1" /> : '' }
+                              ইসলামিক ব্লগ { ( pathname.includes('getHadithBlogs') || pathname.includes('updateHadithBlog') ) ? <HiCheck className="inline ml-1" /> : '' }
                           </Sidebar.Item>
                       </Link>
                     </Sidebar.ItemGroup>
