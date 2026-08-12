@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, TextInput, Label, Button } from "flowbite-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import HeaderLibrary from "../../components/HeaderLibrary";
 import CheckActivationCompo from "../../components/CheckActivationCompo";
 import ReactQuill from "react-quill-new";
@@ -11,6 +11,7 @@ import "react-quill-new/dist/quill.snow.css";
         `
             .ql-editor{
                 font-size:16px !important;
+                background: white !important;
             }        
         `        
     }
@@ -58,17 +59,31 @@ export default function UpdateHadithBlog() {
     
   return (
     <>
-        <style>{`
-            .ql-editor {
-                font-size: 16px !important;
-                color: white !important;
-            }
-        `}</style>    
+        <style>
+            {`
+                .ql-editor {
+                    color: #23262c;                
+                }
+                .ql-snow {
+                    background:white;
+                    border-radius:10px;
+                }
+            `}
+        </style>    
         <HeaderLibrary />
         <CheckActivationCompo>            
-            <div className="p-2 flex flex-col gap-2 items-center">
+            <div className="px-2 py-4 flex flex-col gap-2 items-center">
                 <p className="text-white text-lg text-center font-bold">{hadithBlog.title}</p>
                 <p className="text-white text-sm text-center">{hadithBlog.shortDesc}</p>
+                <p className="text-sm flex flex-wrap gap-2 justify-center">
+                    {
+                        hadithBlog?.tags?.map((tag)=>{
+                            return <Link to={`/ayats/getHadithBlogs/?q=${tag}`} 
+                                        className="border-b border-default text-sm text-white break-all"
+                                    >{tag}</Link>
+                        })
+                    }
+                </p>                
                 {/* <div className="border border-default p-2 rounded-md text-sm bg-white text-gray-900">
                     <div className="prose prose-invert max-w-none" style={{'wordBreak':'break-word'}}
                         dangerouslySetInnerHTML={{
