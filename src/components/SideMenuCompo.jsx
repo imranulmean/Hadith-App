@@ -14,7 +14,7 @@ export default function SideMenuCompo(){
     return (
       <>
         <div className="flex items-center justify-center">
-          <button onClick={() => setIsOpen(true)} className='bg-cyan-900 px-2 py-1 rounded-sm absolute right-1'>
+          <button onClick={() => setIsOpen(true)} className='bg-cyan-900 px-2 py-1 rounded-sm absolute right-3'>
             <FaAlignJustify className="text-white"/>
           </button>
         </div>

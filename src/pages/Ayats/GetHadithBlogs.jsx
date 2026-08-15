@@ -131,8 +131,8 @@ export default function GetHadithBlogs(){
                                 return(
                                     <>
                                         <div  className="w-full  text-white max-w-md flex flex-col border-b border-gray-400 p-2">
-                                            <p className="text-md text-center font-bold">{e.title}</p>
-                                            <p className="text-sm text-center font-normal">{e.shortDesc}</p>
+                                            <p className="text-lg text-center font-bold">{e.title}</p>
+                                            <p className="text-md text-center font-normal">{e.shortDesc}</p>
                                             <p className="text-sm flex flex-wrap gap-2 justify-center">
                                                 Tags:
                                                 {

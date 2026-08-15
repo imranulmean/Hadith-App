@@ -74,7 +74,7 @@ export default function UpdateHadithBlog() {
         <CheckActivationCompo>            
             <div className="px-2 py-4 flex flex-col gap-2 items-center">
                 <p className="text-white text-lg text-center font-bold">{hadithBlog.title}</p>
-                <p className="text-white text-sm text-center">{hadithBlog.shortDesc}</p>
+                <p className="text-white text-md text-center">{hadithBlog.shortDesc}</p>
                 <p className="text-sm flex flex-wrap gap-2 justify-center">
                     {
                         hadithBlog?.tags?.map((tag)=>{
