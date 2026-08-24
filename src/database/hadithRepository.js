@@ -36,6 +36,15 @@ export async function getDataLocalForge(){
     return data;
 }
 
+export async function setLocalforageItem(key, data){
+    await localforage.setItem(key, data);
+}
+
+export async function getLocalforageItem(key){
+    const data = await localforage.getItem(key);
+    return data;    
+}
+
 export async function getHadits() {
 
     let names=[
