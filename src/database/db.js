@@ -32,9 +32,9 @@ export async function openDatabase() {
 
     // -------------------------
     // Native (Android/iOS)
-    // android\app\src\main\assets\public\assets\databases\hadithsSQLite.db
+    // \android\app\src\main\assets\public\assets\databases\hadithsSQLite.db
     // -------------------------
-    const sqliteVer = 2;
+    const sqliteVer = 3;
     const savedSqliteVer = await getLocalforageItem("sqliteVer");
 
     if (Capacitor.isNativePlatform()) {
@@ -49,7 +49,10 @@ export async function openDatabase() {
             await setLocalforageItem("sqliteVer", sqliteVer);
         }
         else if(savedSqliteVer !== sqliteVer ){
-            await sqlite.deleteDatabase("hadiths", false);
+            const conn = await sqlite.createConnection("hadiths", false, "no-encryption", 1, false);
+            await conn.open();
+            await conn.delete();
+             await sqlite.closeConnection("hadiths", false);
             await sqlite.copyFromAssets();
             await setLocalforageItem("sqliteVer", sqliteVer);
         }
