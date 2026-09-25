@@ -23,6 +23,7 @@ import RabbanaDuas from './pages/Ayats/RabbanaDuas';
 import NamazImportance from './pages/Ayats/NamazImportance';
 import GetHadithBlogs from './pages/Ayats/GetHadithBlogs';
 import UpdateHadithBlog from './pages/Ayats/UpdateHadithBlog';
+import OnlineMp3 from './pages/Playlist/OnlineMp3';
 
 export default function App(){
 
@@ -72,6 +73,9 @@ export default function App(){
           <Route path='/ayats/importance_of_namaz' element={<NamazImportance />} />
           <Route path='/ayats/getHadithBlogs' element={<GetHadithBlogs />} />
           <Route path='/ayats/updateHadithBlog/:id' element={<UpdateHadithBlog />} />
+          
+          <Route path='/playlist/onlineMp3' element={<OnlineMp3 />} />
+        
         </Routes>
       </BrowserRouter>    
 

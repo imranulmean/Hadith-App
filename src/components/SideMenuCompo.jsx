@@ -64,6 +64,14 @@ export default function SideMenuCompo(){
                               নামাজের গুরুত্ব ও ফজিলত {pathname.includes('importance_of_namaz') ? <HiCheck className="inline ml-1" /> : '' }
                           </Sidebar.Item>
                       </Link>
+                      <Link to="/playlist/onlineMp3" className="block">
+                          <Sidebar.Item
+                              icon={HiPencilAlt}
+                              className="text-white [&>svg]:text-white border-b border-default rounded-none hover:bg-cyan-900 text-white"
+                          >
+                              Online MP3 {pathname.includes('onlineMp3') ? <HiCheck className="inline ml-1" /> : '' }
+                          </Sidebar.Item>
+                      </Link>
 
                       <Link to="/ayats/getHadithBlogs" className="block">
                           <Sidebar.Item
