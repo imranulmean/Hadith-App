@@ -81,7 +81,7 @@ export default function Hadiths(){
             <Banner loading={loading} />
 
             {loading && (
-                <div className="flex justify-center items-start p-10 bg-[#0C171A] text-gray-200 h-screen">
+                <div className="flex justify-center items-start p-10 bg-[#0C171A] text-gray-200">
                     <p className="text-lg">Fetching Hadiths...</p>
                 </div>
             )}

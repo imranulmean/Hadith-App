@@ -73,6 +73,15 @@ export default function SideMenuCompo(){
                           </Sidebar.Item>
                       </Link>
 
+                      <Link to="/playlist/downloaded" className="block">
+                          <Sidebar.Item
+                              icon={HiPencilAlt}
+                              className="text-white [&>svg]:text-white border-b border-default rounded-none hover:bg-cyan-900 text-white"
+                          >
+                              Downloade MP3 {pathname.includes('downloaded') ? <HiCheck className="inline ml-1" /> : '' }
+                          </Sidebar.Item>
+                      </Link>                      
+
                       <Link to="/ayats/getHadithBlogs" className="block">
                           <Sidebar.Item
                               icon={HiPencilAlt}

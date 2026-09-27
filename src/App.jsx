@@ -24,6 +24,7 @@ import NamazImportance from './pages/Ayats/NamazImportance';
 import GetHadithBlogs from './pages/Ayats/GetHadithBlogs';
 import UpdateHadithBlog from './pages/Ayats/UpdateHadithBlog';
 import OnlineMp3 from './pages/Playlist/OnlineMp3';
+import Downloaded from './pages/Playlist/Downloaded';
 
 export default function App(){
 
@@ -75,6 +76,7 @@ export default function App(){
           <Route path='/ayats/updateHadithBlog/:id' element={<UpdateHadithBlog />} />
           
           <Route path='/playlist/onlineMp3' element={<OnlineMp3 />} />
+          <Route path='/playlist/downloaded' element={<Downloaded />} />
         
         </Routes>
       </BrowserRouter>    

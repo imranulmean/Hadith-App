@@ -4,6 +4,7 @@ import Banner from "../../components/Banner";
 import HeaderLibrary from "../../components/HeaderLibrary";
 import { checkIfTrialEnd, createHadithAppActivation, getQuranSuras } from "../../database/hadithRepository";
 import { HiOutlineX } from "react-icons/hi";
+import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
 
 
@@ -19,34 +20,15 @@ export default function OnlineMp3(){
     const [showPlayer, setShowPlayer] = useState(false);
     const audioRef = useRef(null);
     const BASE_API = import.meta.env.VITE_API_BASE_URL;
+    const [downloading, setDownloading]= useState(false);    
+    const [downloadProgress, setDownloadProgress] = useState(0);
+    const [ surahIndex ,setSurahIndex] = useState(-1);
 
     let onlineSuras=[];    
 
     useEffect(()=>{
         // console.log(localStorage.getItem('lastHadith'))
-         document.title = 'Islamic Library';  
-        //  for(let i=1; i<=114; i++){
-
-        //     let surahMp3=String(i).padStart(3, '0');
-        //     const obj={
-        //         surahId: i,
-        //         links: [
-        //             { name: 'Mishari Al-afasi', link: `https://server8.mp3quran.net/afs/${surahMp3}.mp3` },
-        //             { name: 'Maher Al Muaiqly', link: `https://server12.mp3quran.net/maher/${surahMp3}.mp3` },
-        //             { name: 'Bandar Balila', link: `https://ia601409.us.archive.org/34/items/alfirdwsiy1433_gmail_0356835683568568356856802/${surahMp3}.mp3` },
-        //             { name: 'Khalid Al Jalil', link: `https://server10.mp3quran.net/jleel/${surahMp3}.mp3` },
-        //             { name: 'Hatem Fareed Al Waer', link: `https://server11.mp3quran.net/hatem/${surahMp3}.mp3` },
-        //             { name: 'Khalifa Al Tunaiji', link: `https://server12.mp3quran.net/tnjy/${surahMp3}.mp3` },
-        //             { name: 'Saad Al Ghamdi', link: `https://server7.mp3quran.net/s_gmd/${surahMp3}.mp3` },
-        //             { name: 'Saud Al Shuraim', link: `https://server7.mp3quran.net/shur/${surahMp3}.mp3` },
-        //             { name: 'Al Shatri', link: `https://server11.mp3quran.net/shatri/${surahMp3}.mp3` },
-        //             { name: 'Salah Bukhatir', link: `https://server8.mp3quran.net/bu_khtr/${surahMp3}.mp3` },
-                    
-        //         ]                 
-        //     }
-        //     onlineSuras.push(obj);
-        //  }         
-                 
+         document.title = 'Islamic Library';
          loadBooks();
     },[])  
      
@@ -137,6 +119,61 @@ export default function OnlineMp3(){
 
     };
 
+    const downloadMp3= async(item, surahIndex2)=>{
+        if(downloading){
+            alert('One download in progress')
+            return;
+        }
+        try{
+            if (!selectedAudio) return;
+            setDownloading(true);
+            setSurahIndex(surahIndex2);
+            const downloadedItem=item.playList.links.filter((link)=> link.link === selectedAudio);
+            let mp3FileName= downloadedItem[0].link.split('/');
+            const fileName=`${item.surahHeader}-${downloadedItem[0].name}-${mp3FileName.pop()}`;
+            
+            // if (Capacitor.isNativePlatform()) {
+                const response = await fetch(selectedAudio);
+                if (!response.ok) {
+                    alert(`Download failed: ${response.status}`);
+                    return;
+                }
+                // Total file size
+                const contentLength = response.headers.get('content-length');                
+                const totalSize = contentLength ? parseInt(contentLength, 10) : null;
+                const reader = response.body.getReader();
+                const chunks = [];
+                let receivedSize = 0;
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    receivedSize += value.length;
+                    if (totalSize) {
+                        const progress = Math.round( (receivedSize / totalSize) * 100 );
+                        setDownloadProgress(progress);
+                    }
+                }                                
+                ///////////
+                const blob = new Blob(chunks);
+                // const blob = await response.blob();            
+                await writeBlob({
+                    path: `audio/${fileName}`,
+                    directory: Directory.Data,
+                    blob,
+                    recursive: true,
+                    fast_mode: true
+                });  
+            // }
+        }catch(err){
+            alert(err.message);
+        }finally{
+            setDownloading(false);
+            setSurahIndex(-1);
+            setDownloadProgress(0)
+        }
+    }
+
     const filtered= hadiths.filter((hadith)=>{
         if(!searchSura) return hadith;
         if( hadith.surahHeader.toLowerCase().includes(searchSura.toLowerCase()) || hadith.surahNameEng.toLowerCase().includes(searchSura.toLowerCase()) || hadith.surahNameBn.toLowerCase().includes(searchSura.toLowerCase())) 
@@ -181,7 +218,7 @@ export default function OnlineMp3(){
                             className="text-gray-400 rounded-lg bg-[#0C171A] mt-2" />                       
                 <div className="flex gap-2 flex-wrap justify-center p-4">                    
                     {
-                        filtered.map(item=>{
+                        filtered.map((item, index)=>{
                             return(
                                 <div class="w-full flex flex-col items-start bg-neutral-primary-soft p-6 border-t border-default rounded-base shadow-xs md:flex-row md:max-w-sm md:flex-row md:max-w-sm">
                                     <div class="flex flex-col justify-between md:p-4 leading-normal">
@@ -204,11 +241,27 @@ export default function OnlineMp3(){
                                                     <button onClick={handlePlay}
                                                         class="rounded-md w-full text-center bg-cyan-900 px-4 py-2 text-white mb-2 mt-2"
                                                     >Play</button> 
-                                                    <button onClick={handlePlay}
+                                                    <button onClick={()=>downloadMp3(item, index)}
                                                         class="rounded-md w-full text-center bg-cyan-900 px-4 py-2 text-white mb-2 mt-2"
                                                     >Download</button>                                                    
                                                 </div>
-                                           
+                                                {(downloading && surahIndex==index) && 
+                                                    <div className="w-full mt-3">
+
+                                                        <div className="flex justify-between text-sm mb-1">
+                                                            <span>Downloading...</span>
+                                                            <span>{downloadProgress}%</span>
+                                                        </div>
+
+                                                        <div className="w-full h-2 bg-gray-300 rounded">
+                                                            <div
+                                                                className="h-2 bg-blue-600 rounded transition-all"
+                                                                style={{ width: `${downloadProgress}%`}}
+                                                            />
+                                                        </div>
+
+                                                    </div>
+                                                }                                           
                                             </div>                                            
                                         }
                                             
