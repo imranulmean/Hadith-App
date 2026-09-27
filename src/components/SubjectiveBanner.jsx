@@ -116,7 +116,7 @@ export default function SubjectiveBanner({ title, subTitle, bookName, chapterTit
                                     </button>
                                     {
                                         (selectedAudio && selectedAudio?.links?.length> 0) &&                                         
-                                        <div className="flex justify-center items-center gap-2">
+                                        <div className="flex flex-wrap justify-center items-center gap-2">
                                             {
                                                 selectedAudio.links.map((audio)=>(
                                                     <button onClick={()=>playAudio(audio.link)}
@@ -138,7 +138,7 @@ export default function SubjectiveBanner({ title, subTitle, bookName, chapterTit
                     :
                     <div className="w-full flex flex-col items-center gap-2">
                         <iframe className="w-full h-[50vh]"
-                                src={audioSrc} 
+                                src={`${audioSrc}?autoplay=1`}
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;" 
                                 referrerpolicy="strict-origin-when-cross-origin" 

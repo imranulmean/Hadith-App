@@ -4,6 +4,7 @@ import Banner from "../../components/Banner";
 import HeaderLibrary from "../../components/HeaderLibrary";
 import { checkIfTrialEnd, createHadithAppActivation, getQuranSuras } from "../../database/hadithRepository";
 import { HiOutlineX } from "react-icons/hi";
+import { Device } from "@capacitor/device";
 
 
 export default function OnlineMp3(){
@@ -14,39 +15,57 @@ export default function OnlineMp3(){
     const [searchSura, setSearchSura] = useState(false);
     const [selectedAudio, setSelectedAudio]= useState('');
     const [selectedSura, setSelectedSura] = useState('');
+    const [playingSura, setPlayingSura] = useState('');
     const [showPlayer, setShowPlayer] = useState(false);
     const audioRef = useRef(null);
+    const BASE_API = import.meta.env.VITE_API_BASE_URL;
 
-    const onlineSuras=[
-        { 
-            surahId: 1, 
-            links: [
-                { name: 'Mishary', link: `https://server8.mp3quran.net/afs/001.mp3` }
-            ] 
-        },
-        { 
-            surahId: 2, 
-            links: [
-                { name: 'Mishary', link: `https://server8.mp3quran.net/afs/002.mp3` }
-            ] 
-        }        
-    ]    
+    let onlineSuras=[];    
 
     useEffect(()=>{
         // console.log(localStorage.getItem('lastHadith'))
-         document.title = 'Islamic Library';
+         document.title = 'Islamic Library';  
+        //  for(let i=1; i<=114; i++){
+
+        //     let surahMp3=String(i).padStart(3, '0');
+        //     const obj={
+        //         surahId: i,
+        //         links: [
+        //             { name: 'Mishari Al-afasi', link: `https://server8.mp3quran.net/afs/${surahMp3}.mp3` },
+        //             { name: 'Maher Al Muaiqly', link: `https://server12.mp3quran.net/maher/${surahMp3}.mp3` },
+        //             { name: 'Bandar Balila', link: `https://ia601409.us.archive.org/34/items/alfirdwsiy1433_gmail_0356835683568568356856802/${surahMp3}.mp3` },
+        //             { name: 'Khalid Al Jalil', link: `https://server10.mp3quran.net/jleel/${surahMp3}.mp3` },
+        //             { name: 'Hatem Fareed Al Waer', link: `https://server11.mp3quran.net/hatem/${surahMp3}.mp3` },
+        //             { name: 'Khalifa Al Tunaiji', link: `https://server12.mp3quran.net/tnjy/${surahMp3}.mp3` },
+        //             { name: 'Saad Al Ghamdi', link: `https://server7.mp3quran.net/s_gmd/${surahMp3}.mp3` },
+        //             { name: 'Saud Al Shuraim', link: `https://server7.mp3quran.net/shur/${surahMp3}.mp3` },
+        //             { name: 'Al Shatri', link: `https://server11.mp3quran.net/shatri/${surahMp3}.mp3` },
+        //             { name: 'Salah Bukhatir', link: `https://server8.mp3quran.net/bu_khtr/${surahMp3}.mp3` },
+                    
+        //         ]                 
+        //     }
+        //     onlineSuras.push(obj);
+        //  }         
+                 
          loadBooks();
     },[])  
      
     useEffect(() => {
-        if (showPlayer && selectedAudio && audioRef.current) {
-            audioRef.current.src = selectedAudio;
-            audioRef.current.play();
+        try{
+            if (showPlayer && audioRef.current && selectedAudio) {
+                audioRef.current.src = selectedAudio;
+                audioRef.current.play().catch(err => {
+                    alert(err.message);
+                });
+            }            
+        }catch(err){
+            alert(err.message);
         }
-    }, [showPlayer, selectedAudio]);    
+    }, [showPlayer]); 
 
     const loadBooks=async()=>{
-        setLoading(true);    
+        setLoading(true);
+        const { identifier } = await Device.getId();        
         try{
             await createHadithAppActivation();
             const data= await checkIfTrialEnd();
@@ -58,17 +77,34 @@ export default function OnlineMp3(){
                 setActivated(true);
             }            
             const books=await getQuranSuras();
+
+            const obj={
+                deviceId: identifier
+            }            
+            const res = await fetch(`${BASE_API}/hadithApp/getAudioMp3`,{
+                method:"POST",
+                headers:{
+                'content-type' : 'application/json'
+                },
+                body: JSON.stringify(obj)
+            });
+            const dataMp3 = await res.json();
+            if(!dataMp3.success){
+                alert(dataMp3.message)
+                return;
+            }            
+            onlineSuras= dataMp3.message
             books.map((surah,index)=>{
                 if(surah.surahId === onlineSuras[index]?.surahId){
                     surah['playList']=onlineSuras[index];
                 }
             });
-            console.log(books) 
+            // console.log(books) 
             setHadiths(books);
     
         }
         catch(err){    
-            console.log(err);    
+            console.log(err);
         }
         finally{    
             setLoading(false);    
@@ -77,16 +113,28 @@ export default function OnlineMp3(){
 
 
     const handleChange= (selectedValue, selectedSura2)=>{
-        console.log(selectedValue, selectedSura2)
         setSelectedAudio(selectedValue);
         setSelectedSura(selectedSura2.surahHeader)
     }    
 
     const handlePlay = () => {
-        if (!selectedAudio) {
-            return;
+        try{
+            if (!selectedAudio) return;
+
+            setPlayingSura(selectedSura);
+
+            if (audioRef.current) {
+                audioRef.current.src = selectedAudio;
+                audioRef.current.play().catch(err => {
+                    alert(err.message);
+                });
+            } else {
+                setShowPlayer(true);
+            }
+        }catch(err){
+            alert(err.message);
         }
-        setShowPlayer(true);    
+
     };
 
     const filtered= hadiths.filter((hadith)=>{
@@ -148,7 +196,7 @@ export default function OnlineMp3(){
                                                     <option value='' className="bg-[#0c171a] text-white">Select Mp3</option>
 
                                                     {item.playList.links.map(audio => (
-                                                        <option  key={audio} value={audio.link}
+                                                        <option  value={audio.link}
                                                                 className="bg-[#0c171a] text-white"> {audio.name}</option>
                                                     ))}
                                                 </select>
@@ -173,18 +221,20 @@ export default function OnlineMp3(){
             </div> 
             {
                 showPlayer && (
-                    <div className="fixed bottom-0 left-0 w-full z-50 bg-[#0C171A] border-t border-gray-700 p-3">                        
-                        <button
+                    <div className="p-3 fixed flex flex-col items-end gap-2 bottom-0 left-0 w-full z-50 bg-[#0C171A] border-t border-gray-700">                        
+                        <button className="text-gray-400 hover:text-white text-2xl leading-none"
                             onClick={() => {
                                 audioRef.current?.pause();
                                 audioRef.current.src = "";
                                 setShowPlayer(false);
-                            }}
-                            className="absolute right-3 top-1 text-gray-400 hover:text-white text-2xl leading-none"
+                            }}                            
                         >
                             <HiOutlineX />
                         </button>
-                        <audio ref={audioRef} controls controlsList="nodownload"  className="w-full pr-8" />
+                        <audio ref={audioRef} controls controlsList="nodownload"  className="w-full" />
+                        <div className="text-center text-gray-200 text-sm">
+                            Now Playing: <span className="font-semibold">{playingSura}</span>
+                        </div>                        
                     </div>
                 )
             }        
