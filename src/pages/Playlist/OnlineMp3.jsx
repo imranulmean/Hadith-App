@@ -6,7 +6,24 @@ import { checkIfTrialEnd, createHadithAppActivation, getQuranSuras } from "../..
 import { HiOutlineX } from "react-icons/hi";
 import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
+import { Filesystem, Directory } from "@capacitor/filesystem";
 
+
+const writeBlob = async ({ path, directory, blob, recursive = true}) => {
+
+    const arrayBuffer = await blob.arrayBuffer();
+    const base64 = btoa(
+        new Uint8Array(arrayBuffer)
+            .reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+
+    await Filesystem.writeFile({
+        path,
+        data: base64,
+        directory,
+        recursive
+    });
+};
 
 export default function OnlineMp3(){
 
@@ -161,8 +178,7 @@ export default function OnlineMp3(){
                     path: `audio/${fileName}`,
                     directory: Directory.Data,
                     blob,
-                    recursive: true,
-                    fast_mode: true
+                    recursive: true
                 });  
             // }
         }catch(err){
