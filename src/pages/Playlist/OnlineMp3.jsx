@@ -7,23 +7,7 @@ import { HiOutlineX } from "react-icons/hi";
 import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
 import { Filesystem, Directory } from "@capacitor/filesystem";
-
-
-const writeBlob = async ({ path, directory, blob, recursive = true}) => {
-
-    const arrayBuffer = await blob.arrayBuffer();
-    const base64 = btoa(
-        new Uint8Array(arrayBuffer)
-            .reduce((data, byte) => data + String.fromCharCode(byte), '')
-    );
-
-    await Filesystem.writeFile({
-        path,
-        data: base64,
-        directory,
-        recursive
-    });
-};
+import { FileTransfer } from '@capacitor/file-transfer';
 
 export default function OnlineMp3(){
 
@@ -141,52 +125,50 @@ export default function OnlineMp3(){
             alert('One download in progress')
             return;
         }
+        let listener;
         try{
             if (!selectedAudio) return;
             setDownloading(true);
             setSurahIndex(surahIndex2);
+            setDownloadProgress(0);
             const downloadedItem=item.playList.links.filter((link)=> link.link === selectedAudio);
             let mp3FileName= downloadedItem[0].link.split('/');
             const fileName=`${item.surahHeader}-${downloadedItem[0].name}-${mp3FileName.pop()}`;
             
             // if (Capacitor.isNativePlatform()) {
-                const response = await fetch(selectedAudio);
-                if (!response.ok) {
-                    alert(`Download failed: ${response.status}`);
-                    return;
-                }
-                // Total file size
-                const contentLength = response.headers.get('content-length');                
-                const totalSize = contentLength ? parseInt(contentLength, 10) : null;
-                const reader = response.body.getReader();
-                const chunks = [];
-                let receivedSize = 0;
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    chunks.push(value);
-                    receivedSize += value.length;
-                    if (totalSize) {
-                        const progress = Math.round( (receivedSize / totalSize) * 100 );
-                        setDownloadProgress(progress);
+
+                // Progress listener
+                listener = await FileTransfer.addListener("progress",(progress) => {
+                        if (progress.contentLength) {
+                            const percent = Math.round((progress.bytes / progress.contentLength) * 100);
+                            setDownloadProgress(percent);
+                        }
                     }
-                }                                
-                ///////////
-                const blob = new Blob(chunks);
-                // const blob = await response.blob();            
-                await writeBlob({
-                    path: `audio/${fileName}`,
+                );            
+
+                // Get native file destination
+                const fileInfo = await Filesystem.getUri({
                     directory: Directory.Data,
-                    blob,
-                    recursive: true
-                });  
+                    path: `audio/${fileName}`
+                });                
+
+                await FileTransfer.downloadFile({
+                    url: selectedAudio,
+                    path: fileInfo.uri,
+                    progress: true
+                }); 
+                setDownloadProgress(100);
+                alert("Download completed");
             // }
         }catch(err){
             alert(err.message);
         }finally{
             setDownloading(false);
             setSurahIndex(-1);
-            setDownloadProgress(0)
+            setDownloadProgress(0);
+            if (listener) {
+                await listener.remove();
+            }            
         }
     }
 
@@ -270,8 +252,7 @@ export default function OnlineMp3(){
                                                         </div>
 
                                                         <div className="w-full h-2 bg-gray-300 rounded">
-                                                            <div
-                                                                className="h-2 bg-blue-600 rounded transition-all"
+                                                            <div className="h-2 bg-blue-600 rounded transition-all"
                                                                 style={{ width: `${downloadProgress}%`}}
                                                             />
                                                         </div>

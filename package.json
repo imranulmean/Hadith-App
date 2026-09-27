@@ -15,6 +15,7 @@
     "@capacitor/app": "^8.1.1",
     "@capacitor/core": "^8.4.1",
     "@capacitor/device": "^8.0.3",
+    "@capacitor/file-transfer": "^2.0.5",
     "@capacitor/filesystem": "^8.1.2",
     "@capacitor/status-bar": "^8.0.3",
     "@capgo/capacitor-navigation-bar": "^8.2.6",
